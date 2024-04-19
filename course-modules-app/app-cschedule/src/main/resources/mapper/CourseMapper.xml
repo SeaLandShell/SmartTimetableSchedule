@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.cschedule.mapper.CourseMapper">
+
+<!--    <resultMap id="courseMap" type="course">-->
+<!--        <id property="courseId" column="course_id" />-->
+<!--        <result property="courseNum" column="course_num" />-->
+<!--        <result property="courseName" column="course_name" />-->
+<!--        <result property="coursePic" column="course_pic" />-->
+<!--        <result property="clazzName" column="clazz_name" />-->
+<!--        <result property="synopsis" column="synopsis" />-->
+<!--        <result property="term" column="term" />-->
+<!--        <result property="arrivesNum" column="arrive_num" />-->
+<!--        <result property="resourcesNum" column="resource_num" />-->
+<!--        <result property="experiencesNum" column="experience_num" />-->
+<!--        <result property="appraise" column="appraise" />-->
+<!--        <association property="teacher" column="teacher_id"-->
+<!--                     select="UserMapper.selectById" />-->
+<!--    </resultMap>-->
+
+    <resultMap id="courseDetailMap" type="courseDto">
+        <id property="courseId" column="course_id" />
+        <result property="courseNum" column="course_num" />
+        <result property="courseName" column="course_name" />
+        <result property="coursePic" column="course_pic" />
+        <result property="clazzName" column="clazz_name" />
+        <result property="synopsis" column="synopsis" />
+        <result property="term" column="term" />
+        <result property="arrivesNum" column="arrivesNum" />
+        <result property="resourcesNum" column="resourcesNum" />
+        <result property="experiencesNum" column="experiencesNum" />
+        <result property="appraise" column="appraise" />
+        <result property="teacherId" column="teacher_id" />
+        <result property="teacherName" column="user_name" />
+        <collection property="members" column="course_id"
+                    select="com.app.cschedule.mapper.MemberMapper.getMembersByCourseId" />
+        <collection property="resources" column="course_id"
+                    select="com.app.cschedule.mapper.ResourceMapper.getResourcesByCourseId" />
+        <collection property="notices" column="course_id"
+                    select="com.app.cschedule.mapper.NoticeMapper.getNoticesByCourseId" />
+    </resultMap>
+
+    <select id="getCourseDetail" parameterType="string" resultMap="courseDetailMap">
+        select c.*, u.user_name
+        from t_course c, t_user u
+        where u.user_id = c.teacher_id
+        and c.course_id = #{userId}
+    </select>
+
+    <select id="createList" parameterType="string" resultType="course">
+        select * from t_course
+        where teacher_id = #{userId}
+    </select>
+
+    <select id="joinList" parameterType="string" resultType="course">
+        select c.* from t_course c, t_member m
+        where m.course_id = c.course_id
+        and m.user_id = #{userId}
+    </select>
+
+</mapper>

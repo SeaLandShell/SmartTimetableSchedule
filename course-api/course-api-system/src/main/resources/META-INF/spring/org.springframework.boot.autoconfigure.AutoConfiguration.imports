@@ -1,0 +1,3 @@
+com.course.system.api.factory.RemoteUserFallbackFactory
+com.course.system.api.factory.RemoteLogFallbackFactory
+com.course.system.api.factory.RemoteFileFallbackFactory

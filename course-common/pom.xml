@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.course</groupId>
+        <artifactId>course</artifactId>
+        <version>3.6.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>course-common-log</module>
+        <module>course-common-core</module>
+        <module>course-common-redis</module>
+        <module>course-common-seata</module>
+        <module>course-common-swagger</module>
+        <module>course-common-security</module>
+        <module>course-common-datascope</module>
+        <module>course-common-datasource</module>
+    </modules>
+
+    <artifactId>course-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        course-common通用模块
+    </description>
+
+</project>

@@ -1,0 +1,18 @@
+{
+  "courseId": "",
+  "courseNum": "",
+  "courseName": "",
+  "coursePic": "",
+  "clazzName": "",
+  "term": "",
+  "synopsis": "",
+  "arrivesNum": 0,
+  "resourcesNum": 0,
+  "experiencesNum": 0,
+  "appraise": false,
+  "teacherId": "",
+  "teacherName": "",
+  "id": 0,
+  "gmtCreate": null,
+  "gmtModified": null
+}

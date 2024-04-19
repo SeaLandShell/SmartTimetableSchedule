@@ -1,0 +1,31 @@
+{
+  "code": 200,
+  "msg": "登录成功",
+  "data": {
+    "createBy": "",
+    "createTime": "2024-04-06 13:13:11",
+    "updateBy": "",
+    "updateTime": null,
+    "remark": "",
+    "userId": 2,
+    "deptId": null,
+    "userName": "wxw",
+    "nickName": "",
+    "password": "$2a$10$ZYsDqk8u0eS848yMS8dSe.XNwpESBbzDup44cW5qKUFjZIjSXvr/G",
+    "userType": "01",
+    "email": "",
+    "phonenumber": "13209339330",
+    "stuTuNumber": "",
+    "sex": "0",
+    "avatar": "",
+    "birthday": null,
+    "status": "0",
+    "delFlag": "0",
+    "loginIp": "",
+    "loginDate": null
+  },
+  "mapData": {
+    "access_token": "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VyX2lkIjoyLCJwaG9uZW51bWJlciI6IjEzMjA5MzM5MzMwIiwidXNlcl9rZXkiOiJmZGI4ZTMyYi01Yzg0LTRiZTItYjcyZS04NjQ5Mjg5NWIwYTYiLCJ1c2VybmFtZSI6Ind4dyJ9.-9-JZcxuMkFmowY9zI6owLdHXDT9I3oTAIKdjDSbRADpKCKf87idq2JqvBpK8u0LdZFdxM8_AZIQWyXemEJuOQ",
+    "expires_in": 43200
+  }
+}

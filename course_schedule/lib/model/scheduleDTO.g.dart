@@ -1,44 +1,51 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'schedule.dart';
+part of 'scheduleDTO.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Schedule _$ScheduleFromJson(Map<String, dynamic> json) => Schedule()
+ScheduleDTO _$ScheduleDTOFromJson(Map<String, dynamic> json) => ScheduleDTO()
   ..courseId = json['courseId'] as String
   ..courseNum = json['courseNum'] as String
   ..courseName = json['courseName'] as String
   ..coursePic = json['coursePic'] as String
   ..clazzName = json['clazzName'] as String
-  ..term = json['term'] as String
   ..synopsis = json['synopsis'] as String
-  ..arrivesNum = json['arrivesNum'] as num
-  ..resourcesNum = json['resourcesNum'] as num
-  ..experiencesNum = json['experiencesNum'] as num
+  ..term = json['term'] as String
+  ..arrivesNum = json['arrivesNum'] as int
+  ..resourcesNum = json['resourcesNum'] as int
+  ..experiencesNum = json['experiencesNum'] as int
   ..appraise = json['appraise'] as bool
-  ..teacherId = json['teacherId'] as String
+  ..teacherId = json['teacherId'] as int
   ..teacherName = json['teacherName'] as String
-  ..id = json['id'] as num
-  ..gmtCreate = json['gmtCreate'] as String
-  ..gmtModified = json['gmtModified'] as String;
+  ..members = (json['members'] as List<dynamic>)
+      .map((e) => Member.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..resources = (json['resources'] as List<dynamic>)
+      .map((e) => Resource.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..notices = (json['notices'] as List<dynamic>)
+      .map((e) => Notice.fromJson(e as Map<String, dynamic>))
+      .toList();
 
-Map<String, dynamic> _$ScheduleToJson(Schedule instance) => <String, dynamic>{
+Map<String, dynamic> _$ScheduleDTOToJson(ScheduleDTO instance) =>
+    <String, dynamic>{
       'courseId': instance.courseId,
       'courseNum': instance.courseNum,
       'courseName': instance.courseName,
       'coursePic': instance.coursePic,
       'clazzName': instance.clazzName,
-      'term': instance.term,
       'synopsis': instance.synopsis,
+      'term': instance.term,
       'arrivesNum': instance.arrivesNum,
       'resourcesNum': instance.resourcesNum,
       'experiencesNum': instance.experiencesNum,
       'appraise': instance.appraise,
       'teacherId': instance.teacherId,
       'teacherName': instance.teacherName,
-      'id': instance.id,
-      'gmtCreate': instance.gmtCreate,
-      'gmtModified': instance.gmtModified,
+      'members': instance.members,
+      'resources': instance.resources,
+      'notices': instance.notices,
     };

@@ -1,4 +1,7 @@
+// https://github.com/sooxt98/google_nav_bar
+// https://github.com/jamesblasco/modal_bottom_sheet
 
+import 'package:course_schedule/model/index.dart';
 import 'package:course_schedule/pages/tabs/course/course_activity_page.dart';
 import 'package:course_schedule/pages/tabs/course/course_detail_page.dart';
 import 'package:course_schedule/pages/tabs/course/course_interact_page.dart';
@@ -12,26 +15,29 @@ class CoursePage extends StatefulWidget {
   final int index;
   final Color backgroundColor;
   final String className;
-  const CoursePage({super.key,this.index=0,this.backgroundColor = Values.bgWhite,this.className="云课堂"});
+  final Schedule schedule;
+  const CoursePage({super.key,this.index=0,this.backgroundColor = Values.bgWhite,this.className="云课堂",required this.schedule});
   @override
   State<CoursePage> createState() => _CoursePageState();
 }
 
 class _CoursePageState extends State<CoursePage> {
   late int _currentIndex;
+  late List<Widget> _pages;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _currentIndex=widget.index;
+    _pages = [
+      CourseRecoursePage(schedule: widget.schedule),
+      CourseMemberPage(schedule: widget.schedule),
+      CourseActivityPage(schedule: widget.schedule),
+      CourseInteractPage(schedule: widget.schedule),
+      CourseDetailPage(schedule: widget.schedule),
+    ];
+    // print("我是当前课程课堂页：${widget.schedule.toJson()}");
   }
-  final List<Widget> _pages = const [
-    CourseRecoursePage(),
-    CourseMemberPage(),
-    CourseActivityPage(),
-    CourseInteractPage(),
-    CourseDetailPage(),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

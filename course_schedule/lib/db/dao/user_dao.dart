@@ -8,9 +8,8 @@ abstract class UserDao {
   @Query('SELECT * FROM UserDb')
   Future<List<UserDb>> findAllUsers();
 
-  // 根据ID查询用户
   @Query('SELECT * FROM UserDb WHERE userId = :id')
-  Stream<UserDb?> findUserById(int id);
+  Future<UserDb?> findUserById(int id);
 
   // 插入用户
   @Insert(onConflict: OnConflictStrategy.replace)

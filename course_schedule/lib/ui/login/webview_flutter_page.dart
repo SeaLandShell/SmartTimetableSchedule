@@ -6,7 +6,7 @@
 // import 'dart:io';
 // import 'dart:developer'; // 导入日志记录库
 // import 'package:flutter/material.dart'; // 导入 Flutter Material 组件库
-// import '../../models/course.dart'; // 导入课程模型定义
+// import '../../model/course.dart'; // 导入课程模型定义
 //
 // // 定义 WebViewPage 类，它是一个 StatefulWidget，可以在其中使用 WebView 控件
 // class WebViewPage extends StatefulWidget {

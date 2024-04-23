@@ -25,7 +25,9 @@ class Course implements Comparable<Course> {
   /// 在周几上课 值[1,7] 1表示周一
   int dayOfWeek = 0;
 
-  String group = "智慧计算机2001B";
+  String group = "";
+
+  String courseNum="";
 
   Course(
       {this.name = "",
@@ -35,7 +37,8 @@ class Course implements Comparable<Course> {
       this.classStart = -1,
       this.weekOfTerm = 0,
       this.classLength = 0,
-      this.group = "智慧计算机2001B"});
+      this.group = "",
+      this.courseNum = "",});
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 

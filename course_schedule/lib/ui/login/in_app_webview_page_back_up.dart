@@ -7,7 +7,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 //
-// import '../../models/course.dart';
+// import '../../model/course.dart';
 // import '../../provider/store.dart';
 // import '../../utils/util.dart';
 // import 'my_javascript_interface.dart';

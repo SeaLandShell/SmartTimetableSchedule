@@ -58,8 +58,7 @@ class _PlanPageState extends State<PlanPage> {
               ),
               if (DeviceType.isMobile)
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: _buildReminderTool(), // 构建提醒工具
                 ),
             ],

@@ -1,11 +1,11 @@
-// 两个页面
 import 'package:course_schedule/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:marquee/marquee.dart';
 import '../../data/values.dart';
-import '../../models/course.dart';
+import '../../model/course.dart';
 import '../../provider/store.dart';
+import '../../utils/http_util.dart';
 import '../../utils/util.dart';
 import '../select/select_college_page.dart';
 import 'in_app_webview_page.dart';
@@ -16,12 +16,14 @@ class CollegeLoginPage extends StatefulWidget {
 }
 
 class _CollegeLoginPageState extends State<CollegeLoginPage> {
-  String? _collegeName = "北京联合大学";
+  String? _collegeName;
+  final List<String> _data = []; // 学校数据列表
 
   @override
   void initState() {
     super.initState();
     _getCollegeName();
+    getCollegeList();
   }
 
   // 获取学校名称
@@ -33,6 +35,20 @@ class _CollegeLoginPageState extends State<CollegeLoginPage> {
     setState(() {
       _collegeName = collegeName;
     });
+  }
+  // 获取学校列表数据的方法
+  void getCollegeList() async {
+    try {
+      final resp = await HttpUtil.client.get("/ctimetable/collegeList"); // 发起HTTP请求获取学校列表数据
+      final data = HttpUtil.getDataFromResponse(resp.toString()); // 解析响应数据
+      if (data is List) {
+        // 如果数据是列表类型
+        setState(() {
+          _data.clear(); // 清空数据列表
+          _data.addAll(data.cast<String>()); // 将获取的学校名称数据添加到_data列表中
+        });
+      }
+    } catch (e) {print(e);}
   }
 
   // 导航到WebView页面
@@ -93,12 +109,9 @@ class _CollegeLoginPageState extends State<CollegeLoginPage> {
                 padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    isExpanded: true,
+                    isExpanded: false,
                     value: _collegeName,
-                    items: <String>[
-                      '北京联合大学',
-                      // 在这里添加更多的学校选项
-                    ].map((String value) {
+                    items: _data.map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),

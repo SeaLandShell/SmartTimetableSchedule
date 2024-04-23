@@ -3,7 +3,7 @@ import 'package:course_schedule/utils/parse_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import '../../models/course.dart';
+import '../../model/course.dart';
 
 class InAppWebViewPage extends StatefulWidget {
   final String initialUrl;
@@ -75,7 +75,7 @@ class _InAppWebViewPageState extends State<InAppWebViewPage> {
                       allCookies[cookie.name] = cookie.value;
                       print('cookie${cookie.value}');
                     }
-                    await Future.delayed(Duration(seconds: 1));
+                    // await Future.delayed(Duration(seconds: 1));
                     if(this.url.contains('/xs_main.aspx?')){
                       setState(() {
                         this._isTimetablePageLoaded=true;

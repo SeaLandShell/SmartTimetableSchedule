@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart'; // 导入Flutter的Cupertino库，用�
 import 'package:flutter/material.dart'; // 导入Flutter的material库，包含Flutter应用程序的基本组件和风格
 import 'package:course_schedule/components/pickerview/picker_view.dart'; // 导入自定义的PickerView组件
 import 'package:course_schedule/components/pickerview/picker_view_popup.dart'; // 导入自定义的PickerViewPopup组件
-import 'package:course_schedule/models/course.dart'; // 导入课程模型类
+import 'package:course_schedule/model/course.dart'; // 导入课程模型类
 import 'package:course_schedule/provider/store.dart'; // 导入Store提供者类，用于管理课程数据状态
 import 'package:course_schedule/ui/editcourse/select_week_of_term.dart'; // 导入选择学期周数页面
 import 'package:course_schedule/utils/dialog_util.dart'; // 导入对话框工具类，用于显示对话框
@@ -268,7 +268,7 @@ class _EditCoursePageState extends State<EditCoursePage> {
                                 ),
                                 style: const TextStyle(fontSize: 18), // 文本样式
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ],

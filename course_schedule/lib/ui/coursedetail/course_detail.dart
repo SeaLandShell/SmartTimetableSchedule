@@ -1,5 +1,10 @@
+import 'package:course_schedule/db/database_manager.dart';
+import 'package:course_schedule/db/domain/user_db.dart';
+import 'package:course_schedule/model/index.dart';
+import 'package:course_schedule/net/apiClientSchedule.dart';
+import 'package:course_schedule/utils/shared_preferences_util.dart';
 import 'package:flutter/material.dart'; // 导入Flutter的material库，包含Flutter应用程序的基本组件和风格
-import 'package:course_schedule/models/course.dart'; // 导入课程模型类
+import 'package:course_schedule/model/course.dart'; // 导入课程模型类
 import 'package:course_schedule/provider/store.dart'; // 导入Store提供者类，用于管理课程数据状态
 import 'package:course_schedule/ui/editcourse/edit_course_page.dart'; // 导入编辑课程页面
 import 'package:course_schedule/utils/dialog_util.dart'; // 导入对话框工具类，用于显示对话框
@@ -7,6 +12,7 @@ import 'package:course_schedule/utils/util.dart'; // 导入工具类，包含一
 import 'package:provider/provider.dart';
 
 import '../../data/values.dart';
+import '../../pages/tabs/course/course_import_page.dart';
 import '../../pages/tabs/course/course_page.dart'; // 导入Provider库，用于状态管理
 
 class CourseDetailWidget extends StatelessWidget {
@@ -212,14 +218,8 @@ class CourseDetailWidget extends StatelessWidget {
                           /* 修改 */ // 修改按钮
                           child: TextButton(
                             // 文本按钮组件，用于显示修改按钮
-                            onPressed: () {
-                              // 点击事件，跳转到编辑课程页面进行课程信息的修改
-                              Navigator.pop(context); // 关闭当前页面
-                              Navigator.push(context, // 导航到新页面
-                                  MaterialPageRoute(builder: (context) {
-                                    // 构建新页面
-                                    return CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,);
-                                  }));
+                            onPressed: () async {
+                              await jumPage(course, context);
                             },
                             child: Icon(
                               // 图标组件，显示编辑图标
@@ -252,6 +252,26 @@ class CourseDetailWidget extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+  Future<void> jumPage(Course course,BuildContext context) async {
+    UserDb? user = await DataBaseManager.queryUserById(await SharedPreferencesUtil.getPreference('userID', 0));
+    bool isEnlight = course.courseNum!="";
+    Schedule? schedule;
+    if(isEnlight){
+      schedule = await ApiClientSchdedule.searchCourse(course.courseNum);
+    }
+    Navigator.pop(context); // 关闭当前页面
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      if(user!.userType=='01'){
+        return isEnlight ? CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,schedule: schedule!,) :
+        CourseImportPage(course: course,isTeacher: true,);
+      }else if(user.userType=='02'){
+        return isEnlight ? CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,schedule: schedule!,) :
+        CourseImportPage(course: course,isTeacher: false,);
+      }
+      return CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,schedule: schedule!,);
+    })
     );
   }
 }

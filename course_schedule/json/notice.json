@@ -1,0 +1,11 @@
+{
+  "noticeId": "String",
+  "contentever": "String",
+  "author": "String",
+  "releaseTime": "Date",
+  "type": "Integer",
+  "courseId": "String",
+  "id": "Integer",
+  "gmtCreate": "Date",
+  "gmtModified": "Date"
+}

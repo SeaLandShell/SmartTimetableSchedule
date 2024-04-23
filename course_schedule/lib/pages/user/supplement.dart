@@ -80,7 +80,7 @@ class _SupplementPageState extends State<SupplementPage> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final File file = File(pickedFile.path);
       final url = Uri.parse('$baseUrl/acuser/acuser/avatar?phone=$phoneNumber');

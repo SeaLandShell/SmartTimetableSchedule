@@ -66,6 +66,36 @@
       <excludeFolder url="file://$MODULE_DIR$/add_calendar_event/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/add_calendar_event/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/add_calendar_event/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/awesome_notifications/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/awesome_notifications/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/awesome_notifications/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/awesome_notifications/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/awesome_notifications/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/awesome_notifications/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/awesome_notifications/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/awesome_notifications/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/awesome_notifications/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/awesome_notifications/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/awesome_notifications/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/awesome_notifications/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/permission_handler_windows/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/permission_handler_windows/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/permission_handler_windows/build" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/permission_handler_windows/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/permission_handler_windows/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/course_schedule/windows/flutter/ephemeral/.plugin_symlinks/permission_handler_windows/example/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

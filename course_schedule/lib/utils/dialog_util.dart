@@ -146,6 +146,92 @@ class DialogUtil {
         });
   }
 
+  static Future<DialogResult?> showFileRenameDialog(
+      BuildContext context,String tip ,Widget custom_widget, onClickCallBack okBtnClick,
+      {onClickCallBack? cancelBtnClick}) {
+    return showDialog(
+        context: context, // 上下文对象
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.lightBlue[50], // 设置背景色为浅蓝色
+            contentPadding: EdgeInsets.zero, // 对话框内容填充
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15))), // 对话框形状
+            title: Text(
+              "文件重命名", // 对话框标题
+              textAlign: TextAlign.center, // 文本居中对齐
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min, // 垂直方向最小尺寸
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(24.0), // 设置边距
+                  child: Text(
+                    tip, // 提示文本内容
+                    style:
+                    TextStyle(fontSize: 16, color: Colors.black54), // 文本样式
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0), // 设置边距
+                  child: custom_widget,
+                ),
+                Divider(height: 1.0), // 分割线
+                Container(
+                  height: 48, // 按钮容器高度
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch, // 交叉轴对齐方式
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft:
+                                            Radius.circular(15.0))))),
+                            onPressed: () {
+                              Navigator.pop(context,
+                                  DialogResult.CANCEL); // 关闭对话框，并返回取消结果
+                              if (cancelBtnClick != null) {
+                                cancelBtnClick(); // 执行取消按钮回调函数
+                              }
+                            },
+                            child: Text(
+                              "取消", // 按钮文本内容
+                              style: TextStyle(color: Colors.black), // 按钮文本样式
+                            )),
+                      ),
+                      Container(
+                        height: 48, // 按钮容器高度
+                        child: VerticalDivider(
+                          width: 1.0, // 分割线宽度
+                        ),
+                      ),
+                      Expanded(
+                        child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            bottomRight:
+                                            Radius.circular(15.0))))),
+                            onPressed: () {
+                              Navigator.pop(
+                                  context, DialogResult.OK); // 关闭对话框，并返回确认结果
+                              okBtnClick(); // 执行确定按钮回调函数
+                            },
+                            child: Text("确定")), // 按钮文本内容
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
   static void showLoadingDialog(BuildContext context, {Future? task}) {
     showDialog(
         barrierDismissible: false, // 取消点击其他区域关闭对话框功能

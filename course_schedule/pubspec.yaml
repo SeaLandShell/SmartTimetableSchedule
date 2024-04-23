@@ -45,7 +45,7 @@ dependencies:
   path: ^1.9.0
   path_provider: any
   floor: ^1.4.2
-  image_picker: ^0.8.4+4
+  image_picker: ^1.1.0
   intl: ^0.18.1
   event_bus: ^2.0.0
   flutter_styled_toast: ^2.2.1
@@ -63,6 +63,17 @@ dependencies:
   http_client: ^1.5.3
   flutter_inappwebview: ^5.8.0
   marquee: ^2.2.3
+  flutter_staggered_grid_view: ^0.7.0
+  expansion_tile_card: ^3.0.0
+  wechat_assets_picker: ^9.0.3
+  capped_progress_indicator: ^0.0.2
+  flutter_custom_cards: ^0.2.1
+  google_nav_bar: ^5.0.6
+  tbib_file_uploader: ^1.11.0
+  file_preview: ^1.2.0
+  photo_view: ^0.15.0
+  tbib_downloader: ^1.10.0
+  shine_flutter: ^1.0.2
 #  webview_flutter: ^4.7.0
 
 
@@ -91,7 +102,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

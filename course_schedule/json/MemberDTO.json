@@ -1,0 +1,14 @@
+{
+  "id": "your_id_value",
+  "userId": 123,
+  "courseId": "your_course_id_value",
+  "stuName": "your_stu_name_value",
+  "stuNum": "your_stu_num_value",
+  "avatar": "your_avatar_value",
+  "signature": "your_signature_value",
+  "experience": 456,
+  "resource": 789,
+  "arrive": 101,
+  "score": 90,
+  "remark": "your_remark_value"
+}

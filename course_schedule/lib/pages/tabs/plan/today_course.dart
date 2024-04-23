@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:course_schedule/models/course.dart'; // 导入课程模型
+import 'package:course_schedule/model/course.dart'; // 导入课程模型
 import 'package:course_schedule/provider/store.dart'; // 导入数据存储提供者
 import 'package:course_schedule/utils/util.dart'; // 导入工具类
 import 'package:provider/provider.dart'; // 导入 Provider 状态管理库
 import 'package:timelines/timelines.dart';
 
 import '../../../data/values.dart';
+import '../../../db/database_manager.dart';
+import '../../../db/domain/user_db.dart';
+import '../../../model/schedule.dart';
+import '../../../net/apiClientSchedule.dart';
+import '../../../ui/coursedetail/course_detail.dart';
+import '../../../utils/shared_preferences_util.dart';
+import '../course/course_import_page.dart';
 import '../course/course_page.dart'; // 导入 timelines 库，用于构建时间线视图
 
 /// 今日课程视图组件，用于显示当天的课程安排
@@ -45,10 +52,8 @@ class TodayCourseView extends StatelessWidget {
                 builder: TimelineTileBuilder.fromStyle(
                   contentsAlign: ContentsAlign.basic,
                   contentsBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return CoursePage(index: index, backgroundColor: Values.bgWhite);
-                      }));
+                    onTap: () async {
+                      await jumPage(list[index],context);
                     },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
@@ -69,10 +74,8 @@ class TodayCourseView extends StatelessWidget {
                   oppositeContentsBuilder: (context, index) {
                     final course = list[index];
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return CoursePage(index: index, backgroundColor: Values.bgWhite);
-                        }));
+                      onTap: () async {
+                        await jumPage(course,context);
                       },
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(24, 12, 24, 12),
@@ -102,5 +105,35 @@ class TodayCourseView extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future<bool?> _showCourseDetailDialog(BuildContext context, Course course) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(8),
+          content: CourseDetailWidget(
+            course: course,
+          ),
+        );
+      },
+    );
+  }
+  Future<void> jumPage(Course course,BuildContext context) async {
+    UserDb? user = await DataBaseManager.queryUserById(await SharedPreferencesUtil.getPreference('userID', 0));
+    bool isEnlight = course.courseNum!="";
+    Schedule? schedule;
+    if(isEnlight){
+      schedule = await ApiClientSchdedule.searchCourse(course.courseNum);
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      if(user!.userType=='01'){
+        return isEnlight ? CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,schedule: schedule!,) :
+        CourseImportPage(course: course,isTeacher: true,);
+      }else{
+        return isEnlight ? CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,schedule: schedule!,) :
+        CourseImportPage(course: course,isTeacher: false,);
+      }
+    }));
   }
 }

@@ -1,9 +1,17 @@
+// https://github.com/sooxt98/google_nav_bar
+
 import 'package:course_schedule/pages/tabs/plan/plan.dart';
 import 'package:flutter/material.dart';
+import '../utils/MyNotificationService.dart';
 import './tabs/home/home_page.dart';
 import './tabs/message.dart';
 import './tabs/setting.dart';
 import './tabs/user/user_page.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'dart:developer';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:tbib_downloader/tbib_downloader.dart';
 
 class Tabs extends StatefulWidget {
   final int index;
@@ -20,6 +28,11 @@ class _TabsState extends State<Tabs> {
     // TODO: implement initState
     super.initState();
     _currentIndex=widget.index;
+    AwesomeNotifications().setListeners(
+        onActionReceivedMethod: MyNotificationService.onActionReceivedMethod,
+        onNotificationCreatedMethod: MyNotificationService.onNotificationCreatedMethod,
+        onNotificationDisplayedMethod: MyNotificationService.onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod: MyNotificationService.onDismissActionReceivedMethod);
   }
   final List<Widget> _pages = const [
     PlanPage(),
@@ -92,31 +105,31 @@ class _TabsState extends State<Tabs> {
           },
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.ballot), label: "计划"),
-            BottomNavigationBarItem(icon: Icon(Icons.grid_on), label: "课表"),
+            BottomNavigationBarItem(icon: Icon(Icons.view_comfy_rounded), label: "课表"),
             // BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: "日程"),
             // BottomNavigationBarItem(icon: Icon(Icons.speaker_notes), label: "待办"),
             BottomNavigationBarItem(icon: Icon(Icons.people), label: "我的"),
           ]),
-      floatingActionButton: Container(
-        height: 60, //调整FloatingActionButton的大小
-        width: 60,
-        padding: const EdgeInsets.all(5),
-        margin: const EdgeInsets.only(top: 5), //调整FloatingActionButton的位置
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: FloatingActionButton(
-            backgroundColor: _currentIndex == 1 ? Colors.lightBlue : Colors.blue,
-            child: const Icon(Icons.add),
-            onPressed: () {
-              setState(() {
-                _currentIndex = 1;
-              });
-            }),
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked, //配置浮动按钮的位置
+      // floatingActionButton: Container(
+      //   height: 60, //调整FloatingActionButton的大小
+      //   width: 60,
+      //   padding: const EdgeInsets.all(5),
+      //   margin: const EdgeInsets.only(top: 5), //调整FloatingActionButton的位置
+      //   decoration: BoxDecoration(
+      //     color: Colors.white,
+      //     borderRadius: BorderRadius.circular(30),
+      //   ),
+      //   child: FloatingActionButton(
+      //       backgroundColor: _currentIndex == 1 ? Colors.lightBlue : Colors.blue,
+      //       child: const Icon(Icons.add),
+      //       onPressed: () {
+      //         setState(() {
+      //           _currentIndex = 1;
+      //         });
+      //       }),
+      // ),
+      // floatingActionButtonLocation:
+      //     FloatingActionButtonLocation.centerDocked, //配置浮动按钮的位置
     );
   }
 }

@@ -101,7 +101,8 @@ class UserCard extends StatelessWidget {
                   } else {
                     return _buildLogOutButton(context); // 如果已登录，显示注销按钮
                   }
-                }),
+                },
+            ),
           ],
         ),
       ),
@@ -151,7 +152,7 @@ class UserCard extends StatelessWidget {
   void _uploadIconBtnClick() async {
     try {
       final pickedFile =
-          await picker.getImage(source: ImageSource.gallery); // 从相册选择图片
+          await picker.pickImage(source: ImageSource.gallery); // 从相册选择图片
       if (pickedFile == null) {
         return;
       }

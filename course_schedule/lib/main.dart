@@ -1,5 +1,4 @@
 // import 'dart:io';
-
 import 'dart:developer';
 
 import 'package:course_schedule/provider/store.dart';
@@ -10,13 +9,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:tbib_file_uploader/tbib_file_uploader.dart';
 import './routers/routers.dart';
 import 'data/token_repository.dart';
+import 'package:tbib_downloader/tbib_downloader.dart';
 Future<void> main() async {
   // Avoid errors caused by flutter upgrade.
 // Importing 'package:flutter/widgets.dart' is required.
 //Flutter应用程序中的一种约定，用于确保Flutter应用程序已经初始化完成。通常情况下，它被用于在使用Flutter框架之前执行一些必要的初始化操作，例如初始化插件或执行异步操作。
   WidgetsFlutterBinding.ensureInitialized();
+  await TBIBFileUploader().init();
+  await TBIBDownloader().init();
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
@@ -43,7 +46,6 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   static bool token_bool = false;
 
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -56,9 +58,9 @@ class MyApp extends StatelessWidget {
     int expirationTime = timestamp + expire;
     log('expirtionTime:$expirationTime');
     if(expirationTime>=current && token!='' && expirationTime!=0){
-      // token_bool = true;
-    }else{
       token_bool = true;
+    }else{
+      token_bool = false;
       // final userProvider = Provider.of<UserProvider>(context, listen: false);
       // userProvider.updateLoginState(
       //   true,

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:course_schedule/components/course_block.dart';
-import 'package:course_schedule/models/course.dart';
+import 'package:course_schedule/model/course.dart';
 import 'package:course_schedule/provider/store.dart';
 import 'package:course_schedule/utils/util.dart';
 import 'package:provider/provider.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:course_schedule/components/pickerview/picker_view.dart';
 import 'package:course_schedule/components/pickerview/picker_view_popup.dart';
-import 'package:course_schedule/models/course.dart';
+import 'package:course_schedule/model/course.dart';
 import 'package:course_schedule/provider/store.dart';
 import 'package:course_schedule/utils/http_util.dart';
 import 'package:course_schedule/utils/util.dart';

@@ -4,8 +4,8 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import '../data/token_repository.dart';
-import '../models/code.dart';
-import '../models/user.dart';
+import '../model/code.dart';
+import '../model/user.dart';
 import '../utils/shared_preferences_util.dart';
 import 'globalVariables.dart';
 

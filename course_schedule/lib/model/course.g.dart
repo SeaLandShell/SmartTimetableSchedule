@@ -14,7 +14,8 @@ Course _$CourseFromJson(Map<String, dynamic> json) => Course(
       classStart: json['classStart'] as int? ?? -1,
       weekOfTerm: json['weekOfTerm'] as int? ?? 0,
       classLength: json['classLength'] as int? ?? 0,
-      group: json['group'] as String? ?? "智慧计算机2001B",
+      group: json['group'] as String? ?? "",
+      courseNum: json['courseNum'] as String? ?? "",
     );
 
 Map<String, dynamic> _$CourseToJson(Course instance) => <String, dynamic>{
@@ -26,4 +27,5 @@ Map<String, dynamic> _$CourseToJson(Course instance) => <String, dynamic>{
       'weekOfTerm': instance.weekOfTerm,
       'dayOfWeek': instance.dayOfWeek,
       'group': instance.group,
+      'courseNum': instance.courseNum,
     };

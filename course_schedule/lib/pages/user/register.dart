@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:form_field_validator/form_field_validator.dart';
 
-import '../../models/user.dart';
+import '../../model/user.dart';
 import '../../net/apiClient.dart';
 import '../../net/globalVariables.dart'; // 导入网络请求的apiClient文件，假设路径为'../../net/apiClient.dart'
 

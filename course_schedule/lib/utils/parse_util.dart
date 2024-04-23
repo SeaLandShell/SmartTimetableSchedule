@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart';
 import '../components/select_term_dialog.dart';
-import '../models/course.dart';
+import '../model/course.dart';
 import '../pages/tabs/home/home_page_view_model.dart';
 import '../provider/store.dart';
 
@@ -19,6 +19,7 @@ class ParseUtil {
     // 在这里解析课表数据并导入
     List<Course> courses = parseCourseTableHtml(html);
     String xnxq = getCourseTerm(html);
+    await SharedPreferencesUtil.savePreference('term', xnxq);
     List<String> terms = [xnxq];
     List<String> courses_str = [];
     for (String term in terms) {
@@ -134,6 +135,73 @@ class ParseUtil {
     // 定义方法，解析课程列表并返回Course列表
     const regexCourse = r'(\S+) 周(\S)第(\d+),(\d+)节\{第(\d+)-(\d+)周(\S*)\} (\S+) (\S+)';
     final pattern = RegExp(regexCourse); // 编译正则表达式为RegExp对象
+    final courses = <Course>[]; // 创建一个Course列表用于存储课程信息
+    for (final str in courseList) {
+      // 遍历课程列表
+      final course = Course(); // 创建一个Course对象
+      final matchedStr = str.replaceAll('|', ''); // 替换课程信息中的竖线字符
+      // print('我是matchStr：$matchedStr');
+      final match = pattern.firstMatch(matchedStr); // 使用正则表达式匹配课程信息
+      int classStart=0;
+      int startWeek=1;
+      int endWeek=25;
+      if (match != null) {
+        // 如果匹配成功
+        for (var i = 1; i <= match.groupCount; i++) {
+          // 遍历匹配的组
+          final text = match.group(i) ?? ''; // 获取当前组的文本内容
+          switch (i) {
+          // 根据组的索引进行处理
+            case 1:
+              course.name = text; // 设置课程名称
+              break;
+            case 2:
+              course.dayOfWeek = setDayOfWeek(text); // 设置课程性质
+              break;
+            case 3:
+              classStart = int.parse(text); // 设置星期几
+              course.classStart=classStart;
+              break;
+            case 4:
+              course.classLength = int.parse(text)-classStart+1; // 设置第几节
+              break;
+            case 5:
+              startWeek = int.parse(text); // 设置开课周
+              break;
+            case 6:
+              endWeek = int.parse(text); // 设置结课周
+              break;
+            case 7:
+              course.weekOfTerm = setWeekOfTerm(startWeek, endWeek,text: text);
+              break;
+            case 8:
+              course.teacher = text; // 设置任课老师
+              break;
+            case 9:
+              final room = text.isEmpty ? '暂无安排' : text; // 如果教室地点为空，则设置为"暂无安排"
+              course.classRoom = room; // 设置教室地点
+              break;
+          }
+        }
+        courses.add(course); // 将Course对象添加到列表中
+        // print(course.toJson()); // 打印课程信息
+      }
+    }
+    return courses; // 返回课程信息列表
+  }
+  List<Course> parseTeacherCourseList(List<String> courseList) {
+    // ^：匹配字符串的开头
+    // ([\u4e00-\u9fa5]+)：匹配一个或多个汉字，表示姓名或课程名称
+    // \s+：匹配一个或多个空白字符
+    // (\d+-\d+,\d+-\d+$\d,\d$)：匹配类似“1-11,13-17(1,2)”这样的数字范围和括号内的数字
+    // \s+：匹配一个或多个空白字符
+    // ([\u4e00-\u9fa5]+)：匹配一个或多个汉字，表示姓名或课程名称
+    // \s+：匹配一个或多个空白字符
+    // (\w+)：匹配一个或多个字母、数字或下划线，表示教室号
+    // \s+：匹配一个或多个空白字符
+    // (\w+)：匹配一个或多个字母、数字或下划线，表示班级号
+    const regexTeacherCourse = r'(\S+) (\d+)-(\d+),(\d+)-(\d+)$(\d+),(\d+)$ (\S+) (\S+) (\S+)';
+    final pattern = RegExp(regexTeacherCourse); // 编译正则表达式为RegExp对象
     final courses = <Course>[]; // 创建一个Course列表用于存储课程信息
     for (final str in courseList) {
       // 遍历课程列表

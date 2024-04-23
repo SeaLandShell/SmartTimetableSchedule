@@ -3,13 +3,15 @@ import 'dart:math';
 
 import 'package:flutter/material.dart'; // 导入Flutter框架的Material组件库
 import 'package:course_schedule/entity/time.dart'; // 导入自定义的TimeEntity类
-import 'package:course_schedule/models/course.dart'; // 导入自定义的Course类
+import 'package:course_schedule/model/course.dart'; // 导入自定义的Course类
 import 'package:course_schedule/utils/file_util.dart'; // 导入自定义的文件工具类
 import 'package:course_schedule/utils/shared_preferences_util.dart'; // 导入自定义的SharedPreferences工具类
 import 'package:course_schedule/utils/util.dart'; // 导入自定义的工具类
 import 'package:path/path.dart'; // 导入path库，用于处理文件路径
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart'; // 导入provider库，用于状态管理
+import 'package:provider/provider.dart';
+
+import '../components/select_term_dialog.dart'; // 导入provider库，用于状态管理
 
 class Store extends ChangeNotifier {
   // 定义Store类，继承自ChangeNotifier，用于管理应用状态
@@ -62,6 +64,21 @@ class Store extends ChangeNotifier {
     // final directory = (await getApplicationDocumentsDirectory()).path; // 获取应用程序文档目录路径
     // final path = "$directory/json/$COURSE_JSON_FILE_NAME";
     // print(FileUtil.delete(path));
+    List<String> terms = [await SharedPreferencesUtil.getPreference('term', "2023-2024学年 第2学期")];
+    List<String> courses_str = [];
+    for (String term in terms) {
+      List<Course> list = courses;
+      list.sort((a, b) => a.compareTo(b));
+      String jsonString = jsonEncode(list);
+      courses_str.add(jsonString);
+    }
+    // 获取当前用户ID，并上传课表
+    int userID = await SharedPreferencesUtil.getPreference('userID', -1);
+    bool? res = await addCalendar(userID,terms,courses_str);
+    if(!res!){
+      Util.showToastCourse("服务端数据联动失败，请检查网络！",context as BuildContext);
+      return;
+    }
     FileUtil.saveAsJson(COURSE_JSON_FILE_NAME, json.encode(courses))
         .then((success) {
       // 使用FileUtil工具类保存课程列表到JSON文件

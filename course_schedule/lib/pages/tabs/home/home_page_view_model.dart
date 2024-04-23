@@ -6,7 +6,7 @@ import 'package:course_schedule/components/color_picker_dialog.dart';
 import 'package:course_schedule/data/values.dart';
 import 'package:course_schedule/entity/background_config.dart';
 import 'package:course_schedule/entity/time.dart';
-import 'package:course_schedule/models/course.dart';
+import 'package:course_schedule/model/course.dart';
 import 'package:course_schedule/provider/store.dart';
 import 'package:course_schedule/ui/editcourse/edit_course_page.dart';
 import 'package:course_schedule/pages/tabs/home/home_page_model.dart';
@@ -238,7 +238,7 @@ class HomePageViewModel extends ChangeNotifier {
   void selectBgImgFromPhotoGallery() async {
     try {
       final pickedFile =
-          await picker.getImage(source: ImageSource.gallery); // 从相册中选择图片
+          await picker.pickImage(source: ImageSource.gallery); // 从相册中选择图片
       if (pickedFile == null) {
         return;
       }

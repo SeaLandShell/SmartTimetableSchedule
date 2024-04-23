@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:course_schedule/models/course.dart'; // 导入课程模型
+import 'package:course_schedule/model/course.dart'; // 导入课程模型
 import 'package:course_schedule/utils/device_type.dart'; // 导入设备类型工具类
 import 'package:course_schedule/utils/text_util.dart'; // 导入文本工具类
 

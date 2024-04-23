@@ -1,0 +1,12 @@
+{
+"userId": "String",
+"courseId": "String",
+"arrive": "Integer",
+"resource": "Integer",
+"experience": "Integer",
+"score": "Integer",
+"remark": "String",
+"id": "Integer",
+"gmtCreate": "Date",
+"gmtModified": "Date"
+}

@@ -1,0 +1,12 @@
+{
+  "resId": "String",
+  "resName": "String",
+  "resSize": "Long",
+  "downLink": "String",
+  "uploadTime": "Date",
+  "experience": "Integer",
+  "courseId": "String",
+  "id": "Integer",
+  "gmtCreate": "Date",
+  "gmtModified": "Date"
+}

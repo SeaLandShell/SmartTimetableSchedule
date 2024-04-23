@@ -178,9 +178,10 @@ class _SelectWeekOfTermState extends State<SelectWeekOfTerm> {
                   children: checkBoxes, // 复选框列表
                 ),
               ),
-            )
+            ),
           ],
-        ));
+        )
+    );
   }
 
   bool _isSelectAll() {

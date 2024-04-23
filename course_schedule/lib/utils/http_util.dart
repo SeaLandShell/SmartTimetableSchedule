@@ -93,12 +93,12 @@ class HttpUtil {
     // var resp = json.decode(jsonStr ?? ""); // 解码 JSON 字符串为 Map 对象
     // jsonDecode(response.body) as Map<String, dynamic>;
     final Map<String, dynamic> resp = jsonDecode(jsonStr??"");
-    if (resp["code"] == 200 || resp["status"]== 0) {
+    if (resp["code"] == 200 || resp['code']==0 || resp["status"]== 0) {
       // 如果响应状态码为 0（成功）
       return resp["data"]; // 返回数据部分
     } else {
       // 如果响应状态码不为 0（失败）
-      if (!TextUtil.isEmpty(resp["msg"])) {
+      if (!TextUtil.isEmpty(resp["msg"]) || !TextUtil.isEmpty(resp["message"])) {
         // 如果响应中包含错误消息
         if (isDialogMode) {
           // 如果以对话框模式显示错误消息
@@ -107,11 +107,15 @@ class HttpUtil {
             throw Exception("要使用tipDialog,请设置context"); // 抛出异常，提示需要设置上下文对象
           } else {
             // 如果上下文对象不为空
-            DialogUtil.showTipDialog(context, resp["msg"]); // 显示提示对话框
+            if(!TextUtil.isEmpty(resp["msg"])){
+              DialogUtil.showTipDialog(context, resp["msg"]); // 显示提示对话框
+            }else{
+              DialogUtil.showTipDialog(context, resp["message"]); // 显示提示对话框
+            }
           }
         } else {
           // 如果以普通模式显示错误消息
-          Util.showToastCourse(resp["msg"],context!); // 显示普通提示消息
+          Util.showToastCourse(resp["msg"],context as BuildContext); // 显示普通提示消息
         }
       }
       return null; // 返回空值

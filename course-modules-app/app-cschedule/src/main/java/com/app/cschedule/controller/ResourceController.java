@@ -1,42 +1,44 @@
-package com.app.cschedule.controller;
+package com.app.cschedule.controller; // 包声明
 
-import com.app.cschedule.common.annotation.LogAnnotation;
-import com.app.cschedule.common.result.Result;
-import com.app.cschedule.common.result.ResultCode;
-import com.app.cschedule.common.support.BaseController;
-import com.app.cschedule.common.util.JsonUtils;
-import com.app.cschedule.entity.Resource;
-import com.app.cschedule.model.ResourceDTO;
-import com.app.cschedule.service.ResourceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import com.app.cschedule.common.annotation.LogAnnotation; // 导入LogAnnotation注解
+import com.app.cschedule.common.result.Result; // 导入Result类
+import com.app.cschedule.common.result.ResultCode; // 导入ResultCode枚举
+import com.app.cschedule.common.support.BaseController; // 导入BaseController类
+import com.app.cschedule.common.util.JsonUtils; // 导入JsonUtils工具类
+import com.app.cschedule.entity.Resource; // 导入Resource实体类
+import com.app.cschedule.model.ResourceDTO; // 导入ResourceDTO模型类
+import com.app.cschedule.service.ResourceService; // 导入ResourceService服务类
+import io.swagger.annotations.Api; // 导入Api注解
+import io.swagger.annotations.ApiOperation; // 导入ApiOperation注解
+import org.springframework.beans.factory.annotation.Autowired; // 导入Autowired注解
+import org.springframework.web.bind.annotation.*; // 导入RequestMapping注解和相关注解
+import org.springframework.web.multipart.MultipartFile; // 导入MultipartFile类
 
-@Api(tags = "班级资源管理")
-@RestController
-@RequestMapping("/api/v1/resources")
-public class ResourceController extends BaseController {
-    @Autowired
-    private ResourceService resourceService;
+@Api(tags = "班级资源管理") // 使用Api注解，定义接口标签为"班级资源管理"
+@RestController // 声明该类是一个控制器，并返回RESTful风格的数据
+@RequestMapping("/resources") // 映射请求路径为/resources的接口
+public class ResourceController extends BaseController { // 定义ResourceController类，继承BaseController类
 
-    @ApiOperation(value = "添加资源")
-    @LogAnnotation(operation = "添加资源")
-    @PostMapping
-    public Result addResource(@RequestParam("info") String resourceForm , @RequestParam("file") MultipartFile file) {
-        Resource resource = JsonUtils.toBean(resourceForm, Resource.class);
-        if(resource == null) {
-            return Result.error(ResultCode.PARAM_IS_INVALID);
+    @Autowired // 使用Autowired注解，自动装配ResourceService对象
+    private ResourceService resourceService; // 声明ResourceService对象
+
+    @ApiOperation(value = "添加资源") // 使用ApiOperation注解，定义接口操作为"添加资源"
+    @LogAnnotation(operation = "添加资源") // 记录添加资源操作日志
+    @PostMapping // 映射POST请求
+    public Result addResource(@RequestParam("info") String resourceForm , @RequestParam("file") MultipartFile file) { // 定义添加资源的方法，接收资源信息和文件作为参数
+        System.out.println(resourceForm);
+        Resource resource = JsonUtils.toBean(resourceForm, Resource.class); // 将资源信息转换为Resource对象
+        if(resource == null) { // 如果资源对象为空
+            return Result.error(ResultCode.PARAM_IS_INVALID); // 返回参数无效的错误结果
         }
-        resource =  resourceService.addResource(resource, file);
-        return handleResult(new ResourceDTO().convertFor(resource));
+        resource =  resourceService.addResource(resource, file); // 调用ResourceService的addResource方法添加资源
+        return handleResult(new ResourceDTO().convertFor(resource)); // 处理结果并返回转换后的ResourceDTO对象
     }
 
-    @ApiOperation(value = "删除资源")
-    @LogAnnotation(operation = "删除资源")
-    @DeleteMapping("/{id}")
-    public Result deleteResource(@PathVariable String id) {
-        return handleResult(resourceService.deleteByExId(id));
+    @ApiOperation(value = "删除资源") // 使用ApiOperation注解，定义接口操作为"删除资源"
+    @LogAnnotation(operation = "删除资源") // 记录删除资源操作日志
+    @DeleteMapping("/{id}") // 映射DELETE请求，路径中包含资源ID
+    public Result deleteResource(@PathVariable String id) { // 定义删除资源的方法，接收资源ID作为参数
+        return handleResult(resourceService.deleteByExId(id)); // 处理结果并返回ResourceService的deleteByExId方法删除资源
     }
 }

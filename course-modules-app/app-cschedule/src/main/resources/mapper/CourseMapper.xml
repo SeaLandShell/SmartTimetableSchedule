@@ -33,7 +33,7 @@
         <result property="experiencesNum" column="experiencesNum" />
         <result property="appraise" column="appraise" />
         <result property="teacherId" column="teacher_id" />
-        <result property="teacherName" column="user_name" />
+        <result property="teacherName" column="teacher_name" />
         <collection property="members" column="course_id"
                     select="com.app.cschedule.mapper.MemberMapper.getMembersByCourseId" />
         <collection property="resources" column="course_id"
@@ -44,9 +44,9 @@
 
     <select id="getCourseDetail" parameterType="string" resultMap="courseDetailMap">
         select c.*, u.user_name
-        from t_course c, t_user u
+        from t_course c, course_user u
         where u.user_id = c.teacher_id
-        and c.course_id = #{userId}
+        and c.course_id = #{clazzId}
     </select>
 
     <select id="createList" parameterType="string" resultType="course">

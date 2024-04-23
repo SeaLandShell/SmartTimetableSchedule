@@ -10,6 +10,8 @@ public interface MemberService extends IService<Member> {
      */
     int addMember(Member member);
 
+    Member selectMember(Member member);
+
     /**
      * 给学生评分
      */

@@ -16,9 +16,13 @@ public class MemberServiceImpl extends BaseService<Member> implements MemberServ
     @Override
     public int addMember(Member member) {
         if (memberMapper.selectOne(member) != null) {
-            throw new ServiceException("成员已存在");
+            return 0;
         }
         return memberMapper.insert(member);
+    }
+    @Override
+    public Member selectMember(Member member){
+        return memberMapper.selectOne(member);
     }
 
     @Override

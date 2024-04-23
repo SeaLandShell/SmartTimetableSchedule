@@ -22,7 +22,10 @@ public class MemberController extends BaseController {
     @LogAnnotation(operation = "加入课程")
     @PostMapping
     public Result addMember(@RequestBody Member form) {
-        return handleResult(memberService.addMember(form));
+        if(memberService.addMember(form)>0){
+            return handleResult(memberService.selectMember(form));
+        }
+        return handleResult(form).setMessage("当前已在课程内或其他异常原因！");
     }
 
     @ApiOperation(value = "退出课程/删除成员")

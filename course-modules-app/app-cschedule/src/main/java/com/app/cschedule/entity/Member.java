@@ -13,7 +13,7 @@ public class Member extends BaseEntity { // 定义Member类，继承BaseEntity�
 
 //    private static final long serialVersionUID = 5678845178960858841L;
 
-    private String userId; // 用户ID，字符串类型
+    private Integer userId; // 用户ID，字符串类型
     private String courseId; // 课程ID，字符串类型
     private Integer arrive; // 到课次数，整数类型
     private Integer resource; // 资源数量，整数类型

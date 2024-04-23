@@ -12,9 +12,6 @@ import lombok.experimental.Accessors; // 导入lombok注解@Accessors
 @Accessors(chain = true) // 支持链式调用
 @ToString(exclude = {"synopsis","teacher", "members", "resources", "notices"}) // 生成toString方法，排除synopsis、teacher、members、resources、notices字段
 public class Course extends BaseEntity { // 定义Course类，继承BaseEntity类
-
-//    private static final long serialVersionUID = 5454990500926278155L;
-
     private String courseId; // 课程ID，字符串类型
     private String courseNum; // 课程编号，字符串类型
     private String courseName; // 课程名称，字符串类型
@@ -26,6 +23,6 @@ public class Course extends BaseEntity { // 定义Course类，继承BaseEntity�
     private Integer resourcesNum; // 资源数量，整数类型
     private Integer experiencesNum; // 体验人数，整数类型
     private Boolean appraise; // 评价，布尔类型
-    private String teacherId; // 教师ID，字符串类型
+    private Integer teacherId; // 教师ID，字符串类型
     private String teacherName; // 教师姓名，字符串类型
 }

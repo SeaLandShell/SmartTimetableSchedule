@@ -9,6 +9,10 @@ public class Course implements Cloneable, Comparable<Course> {
     private int weekOfTerm = -1;//开始上课的周,用二进制后25位表示是否为本周
     private int dayOfWeek = 0;//在周几上课 值[1,7] 1表示周一
 
+    private String group;
+
+    private String courseNum;
+
     public int getClassStart() {
         return classStart;
     }
@@ -67,6 +71,22 @@ public class Course implements Cloneable, Comparable<Course> {
 
     public void setTeacher(String teacher) {
         this.teacher = teacher;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getCourseNum() {
+        return courseNum;
+    }
+
+    public void setCourseNum(String courseNum) {
+        this.courseNum = courseNum;
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.springframework.beans.BeanUtils;
 public class MemberDTO {
     private String id;
 
-    private String userId;
+    private Integer userId;
 
     private String courseId;
 

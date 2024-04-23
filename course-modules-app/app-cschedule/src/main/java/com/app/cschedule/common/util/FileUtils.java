@@ -56,13 +56,11 @@ public class FileUtils {
             if (fileName.contains("..")) {
                 throw new FileException("Sorry! Filename contains invalid path sequence " + fileName); // 抛出文件异常
             }
-
             // 将文件复制到目标位置（替换同名文件）
             Path targetLocation = UPLOAD_PATH.resolve(storePath).resolve(fileName).normalize(); // 目标文件路径
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING); // 复制文件到目标位置
-
             String relative = storePath.resolve(fileName).toString().replaceAll("\\\\", "/"); // 相对路径
-            log.info(relative); // 记录日志
+            log.info("relative: "+relative); // 记录日志
             return relative; // 返回相对路径
         } catch (IOException ex) {
             throw new FileException("Could not store file " + fileName + ". Please try again!", ex); // 抛出文件异常

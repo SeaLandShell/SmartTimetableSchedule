@@ -298,7 +298,6 @@ public class BUUCollege implements College {
                 return index != -1 ? cookie.substring(0, index) : cookie;
             }).collect(Collectors.toList());
             response.close();
-
             return String.join("; ", list);
         } catch (IOException e) {
             e.printStackTrace();

@@ -33,17 +33,16 @@ public class SelectSqlBuilder {
      */
     public String buildSelectByExId(ProviderContext context) {
         // 获取接口上的元注解（不是实体）
-        final String table = context.getMapperType().getAnnotation(BaseMapper.Meta.class).table();
-        final String exId = context.getMapperType().getAnnotation(BaseMapper.Meta.class).exId();
-        if(StringUtils.isEmpty(exId)) {
-            throw new ServiceException("The extension id cannot be empty");
+        final String table = context.getMapperType().getAnnotation(BaseMapper.Meta.class).table(); // 从MapperType上的元注解中获取表名
+        final String exId = context.getMapperType().getAnnotation(BaseMapper.Meta.class).exId(); // 从MapperType上的元注解中获取扩展ID
+        if(StringUtils.isEmpty(exId)) { // 判断扩展ID是否为空
+            throw new ServiceException("The extension id cannot be empty"); // 如果为空，则抛出ServiceException异常
         }
-
         return new SQL(){{
-            SELECT("*");
-            FROM(table);
-            WHERE(exId + " = #{exId}");
-        }}.toString();
+            SELECT("*"); // 选择所有字段
+            FROM(table); // 指定查询的表名
+            WHERE(exId + " = #{exId}"); // 指定查询条件，根据扩展ID进行查询
+        }}.toString(); // 返回构建好的查询SQL语句字符串
     }
 
     /**

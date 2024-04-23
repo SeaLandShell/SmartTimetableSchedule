@@ -22,8 +22,8 @@
 
     <!-- 被其他mapper引用 -->
     <select id="getMembersByCourseId" parameterType="string" resultType="memberDto">
-        select m.id, u.user_id, m.course_id, u.user_name stuName, u.stu_num, u.avatar, u.signature, m.experience, m.arrive, score, remark
-        from t_member m, t_user u
+        select m.course_id, u.user_id, m.course_id, u.user_name stuName, u.stu_tu_number stuNum, u.avatar, u.remark signature, m.experience, m.resource ,m.arrive, m.score, m.remark
+        from t_member m, course_user u
         where course_id = #{courseId}
         and m.user_id = u.user_id
     </select>

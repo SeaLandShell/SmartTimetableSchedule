@@ -24,7 +24,7 @@ public class CourseDTO { // 定义课程数据传输对象类
     private Integer resourcesNum; // 资源数量
     private Integer experiencesNum; // 经验数量
     private boolean appraise; // 评价
-    private String teacherId; // 教师ID
+    private Integer teacherId; // 教师ID
     private String teacherName; // 教师姓名
     private List<Member> members; // 成员列表
     private List<Resource> resources; // 资源列表

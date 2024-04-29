@@ -35,6 +35,11 @@ public class CourseUserServiceImpl implements ICourseUserService
         return courseUserMapper.getUserCountByPhoneNumber(phone);
     }
 
+    @Override
+    public CourseUser selectCourseUserByStuTuNumber(String stuTuNumber){
+        return courseUserMapper.selectCourseUserByStuTuNumber(stuTuNumber);
+    }
+
     /**
      * 查询智课表用户
      * 

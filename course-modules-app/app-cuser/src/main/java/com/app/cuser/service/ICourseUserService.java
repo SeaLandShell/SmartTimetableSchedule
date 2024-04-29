@@ -33,6 +33,8 @@ public interface ICourseUserService
      */
     public List<CourseUser> selectCourseUserList(CourseUser courseUser);
 
+    public CourseUser selectCourseUserByStuTuNumber(String stuTuNumber);
+
     /**
      * 新增智课表用户
      * 

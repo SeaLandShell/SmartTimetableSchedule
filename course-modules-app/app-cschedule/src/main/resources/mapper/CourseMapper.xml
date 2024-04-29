@@ -40,13 +40,40 @@
                     select="com.app.cschedule.mapper.ResourceMapper.getResourcesByCourseId" />
         <collection property="notices" column="course_id"
                     select="com.app.cschedule.mapper.NoticeMapper.getNoticesByCourseId" />
+        <collection property="works" column="course_id"
+                    select="com.app.cschedule.mapper.WorkMapper.getWorksByCourseId" />
+        <collection property="uploads" column="course_id"
+                    select="com.app.cschedule.mapper.UploadMapper.getUploadsByCourseId" />
+        <collection property="works" column="course_id"
+                    select="com.app.cschedule.mapper.MnoticeMapper.getMnoticesByCourseId" />
     </resultMap>
 
+    <resultMap id="courseMap" type="course">
+        <id property="courseId" column="course_id" />
+        <result property="courseNum" column="course_num" />
+        <result property="courseName" column="course_name" />
+        <result property="coursePic" column="course_pic" />
+        <result property="clazzName" column="clazz_name" />
+        <result property="synopsis" column="synopsis" />
+        <result property="term" column="term" />
+        <result property="arrivesNum" column="arrivesNum" />
+        <result property="resourcesNum" column="resourcesNum" />
+        <result property="experiencesNum" column="experiencesNum" />
+        <result property="appraise" column="appraise" />
+        <result property="teacherId" column="teacher_id" />
+        <result property="teacherName" column="teacher_name" />
+    </resultMap>
+
+<!--    以教师身份为标识，查找课程详情-->
     <select id="getCourseDetail" parameterType="string" resultMap="courseDetailMap">
         select c.*, u.user_name
         from t_course c, course_user u
         where u.user_id = c.teacher_id
         and c.course_id = #{clazzId}
+    </select>
+
+    <select id="searchCourseByCourseId" parameterType="string" resultMap="courseMap">
+        select * from t_course where course_id=#{courseId}
     </select>
 
     <select id="createList" parameterType="string" resultType="course">

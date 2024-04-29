@@ -66,7 +66,6 @@ public class UpdateSqlBuilder {
         }
         String ID = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, exId);
         sql.replace(sql.length()-1, sql.length(), " WHERE " + exId + " = #{" + ID + "};");
-
         return sql.toString();
     }
 }

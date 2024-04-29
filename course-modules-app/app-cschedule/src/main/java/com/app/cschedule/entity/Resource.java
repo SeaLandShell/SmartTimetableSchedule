@@ -4,12 +4,15 @@ import com.app.cschedule.common.support.BaseEntity; // 导入BaseEntity类
 import com.fasterxml.jackson.annotation.JsonFormat; // 导入JsonFormat注解
 import lombok.Data; // 导入lombok注解@Data
 import lombok.experimental.Accessors; // 导入lombok注解@Accessors
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date; // 导入Date类
 
 /**
  * @author ankoye@qq.com
  */
+@Repository
 @Data // 自动生成getter、setter方法、equals方法、hashCode方法、toString方法
 @Accessors(chain = true) // 支持链式调用
 public class Resource extends BaseEntity { // 定义Resource类，继承BaseEntity类

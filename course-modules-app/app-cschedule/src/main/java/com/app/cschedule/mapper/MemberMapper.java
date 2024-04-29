@@ -2,13 +2,22 @@ package com.app.cschedule.mapper;
 
 import com.app.cschedule.common.support.BaseMapper;
 import com.app.cschedule.entity.Member;
+import com.app.cschedule.model.MemberDTO;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @BaseMapper.Meta(table = "t_member")
 public interface MemberMapper extends BaseMapper<Member> {
 
     int grade(Member scoreForm);
+
+    int updateMember(Member member);
+
+    int customDelete(Member member);
+
+    List<MemberDTO> getMembersByCourseId(String courseId);
 //
 //    @Select("select * from t_member" +
 //            " where course_id = #{courseId}" +

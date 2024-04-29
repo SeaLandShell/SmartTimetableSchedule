@@ -22,7 +22,6 @@ import java.io.IOException; // 导入IOException类
 @RestController // 声明该类是一个控制器，并返回RESTful风格的数据
 @RequestMapping("/files") // 映射请求路径为/files的接口
 public class FileController { // 定义FileController类
-
     // @GetMapping("/download/{path:.+}/{filename:.+}") // 匹配两层路径
     @GetMapping("/download/**") // 匹配多重路径
     @ApiOperation(value = "下载文件") // 使用ApiOperation注解，定义接口操作为"下载文件"

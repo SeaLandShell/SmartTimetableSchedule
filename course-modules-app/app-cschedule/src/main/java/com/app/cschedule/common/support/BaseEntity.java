@@ -1,5 +1,6 @@
 package com.app.cschedule.common.support;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,9 +15,11 @@ public abstract class BaseEntity implements Serializable {
     protected Integer id;
 
     /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     protected Date gmtCreate;
 
     /** 修改时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     protected Date gmtModified;
 
     public boolean modified() {

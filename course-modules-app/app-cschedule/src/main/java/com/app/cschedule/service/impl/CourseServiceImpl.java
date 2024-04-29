@@ -2,10 +2,7 @@ package com.app.cschedule.service.impl; // 声明包名为com.app.cschedule.serv
 
 import com.app.cschedule.common.support.BaseService; // 导入BaseService类
 import com.app.cschedule.common.util.FileUtils; // 导入FileUtils工具类
-import com.app.cschedule.mapper.CourseMapper; // 导入CourseMapper接口
-import com.app.cschedule.mapper.MemberMapper; // 导入MemberMapper接口
-import com.app.cschedule.mapper.NoticeMapper; // 导入NoticeMapper接口
-import com.app.cschedule.mapper.ResourceMapper; // 导入ResourceMapper接口
+import com.app.cschedule.mapper.*;
 import com.app.cschedule.entity.Course; // 导入Course类
 import com.app.cschedule.entity.Member; // 导入Member类
 import com.app.cschedule.entity.Notice; // 导入Notice类
@@ -34,6 +31,8 @@ public class CourseServiceImpl extends BaseService<Course> implements CourseServ
     private NoticeMapper noticeMapper; // 声明NoticeMapper类型的私有变量noticeMapper
     @Autowired // 自动注入
     private ResourceMapper resourceMapper; // 声明ResourceMapper类型的私有变量resourceMapper
+    @Autowired
+    private WorkMapper workMapper;
 
     @Override // 重写父类或接口的方法
     public List<Course> getAllCourses(String userId) { // 定义getAllCourses方法，参数为userId
@@ -50,6 +49,11 @@ public class CourseServiceImpl extends BaseService<Course> implements CourseServ
     @Override // 重写父类或接口的方法
     public Course searchCourse(String courseNum) { // 定义searchCourse方法，参数为courseNum
         return courseMapper.selectOne(new Course().setCourseNum(courseNum)); // 调用courseMapper的selectOne方法，传入设置了courseNum的Course对象，返回结果
+    }
+
+    @Override
+    public Course searchCourseByCourseId(String courseId){
+        return courseMapper.searchCourseByCourseId(courseId);
     }
 
     @Override // 重写父类或接口的方法

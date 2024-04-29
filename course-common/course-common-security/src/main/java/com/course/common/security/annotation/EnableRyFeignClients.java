@@ -17,7 +17,7 @@ public @interface EnableRyFeignClients
 {
     String[] value() default {};
 
-    String[] basePackages() default { "com.course" };
+    String[] basePackages() default { "com.course","com.app" };
 
     Class<?>[] basePackageClasses() default {};
 

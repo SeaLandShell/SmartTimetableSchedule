@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.cschedule.mapper.WorkMapper">
+
+    <resultMap type="work" id="WorkResult">
+        <result property="workId" column="work_id" />
+        <result property="courseId" column="course_id" />
+        <result property="workName" column="work_name" />
+        <result property="isEnabled" column="is_enabled" />
+        <result property="content" column="content" />
+        <result property="linkResource" column="link_resource" />
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="state" column="state" />
+        <result property="gmtCreate" column="gmt_create" />
+        <result property="gmtModified" column="gmt_modified" />
+    </resultMap>
+
+    <!-- 被其他mapper引用 -->
+    <select id="getWorksByCourseId" parameterType="string" resultType="work">
+        select * from t_work
+        where course_id = #{courseId}
+    </select>
+
+
+
+    <select id="selectWorkByCourseIdWorkName" parameterType="map" resultMap="WorkResult">
+        select * from t_work
+        where course_id = #{courseId} and work_name = #{workName}
+    </select>
+</mapper>

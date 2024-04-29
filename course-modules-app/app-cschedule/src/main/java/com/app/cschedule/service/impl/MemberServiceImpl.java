@@ -21,6 +21,15 @@ public class MemberServiceImpl extends BaseService<Member> implements MemberServ
         return memberMapper.insert(member);
     }
     @Override
+    public int updateMember(Member member){
+        return  memberMapper.updateMember(member);
+    }
+
+    @Override
+    public int customDelete(Member member){
+        return memberMapper.customDelete(member);
+    }
+    @Override
     public Member selectMember(Member member){
         return memberMapper.selectOne(member);
     }

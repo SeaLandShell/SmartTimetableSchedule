@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.Converter;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-
+@Repository
 @Data
 public class ResourceDTO {
     private String resId;

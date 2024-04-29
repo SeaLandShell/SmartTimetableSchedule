@@ -49,7 +49,7 @@ public class CourseUserController extends BaseController
     /**
      * 查询智课表用户列表
      */
-    @RequiresPermissions("acuser:acuser:list")
+
     @GetMapping("/list")
     public TableDataInfo list(CourseUser courseUser)
     {
@@ -79,6 +79,14 @@ public class CourseUserController extends BaseController
     public AjaxResult getInfo(@PathVariable("userId") Long userId)
     {
         return success(courseUserService.selectCourseUserByUserId(userId));
+    }
+
+    @Log(title = "通过学号获取智课表用户", businessType = BusinessType.UPDATE)
+    @ResponseBody
+    @GetMapping("/stuTuNumber")
+    public AjaxResult getUserByStuTuNumber(String stuTuNumber)
+    {
+        return AjaxResult.success(courseUserService.selectCourseUserByStuTuNumber(stuTuNumber));
     }
 
     /**

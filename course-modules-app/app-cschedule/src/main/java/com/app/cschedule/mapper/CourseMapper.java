@@ -17,6 +17,8 @@ public interface CourseMapper extends BaseMapper<Course> {
 
     CourseDTO getCourseDetail(String clazzId);
 
+    Course searchCourseByCourseId(String courseId);
+
 
 //    @Select("select * from t_course" +
 //            " where course_num = #{courseNum}")

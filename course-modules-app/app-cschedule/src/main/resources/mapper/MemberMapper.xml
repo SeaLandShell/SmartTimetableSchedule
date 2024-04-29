@@ -5,8 +5,7 @@
 <mapper namespace="com.app.cschedule.mapper.MemberMapper">
 
 <!--    <resultMap id="memberMap" type="member">-->
-<!--        <id property="id" column="id" />-->
-<!--        <result property="user.userId" column="user_id" />-->
+<!--        <result property="userId" column="user_id" />-->
 <!--        <result property="courseId" column="course_id" />-->
 <!--        <result property="experience" column="experience" />-->
 <!--        <result property="arrive" column="arrive" />-->
@@ -14,11 +13,10 @@
 <!--        <result property="experience" column="experience" />-->
 <!--        <result property="score" column="score" />-->
 <!--        <result property="remark" column="remark" />-->
-<!--        <result property="user.userName" column="user_name" />-->
-<!--        <result property="user.userNum" column="user_num" />-->
-<!--        <result property="user.avatar" column="avatar" />-->
-<!--        <result property="user.signature" column="signature" />-->
 <!--    </resultMap>-->
+
+
+
 
     <!-- 被其他mapper引用 -->
     <select id="getMembersByCourseId" parameterType="string" resultType="memberDto">
@@ -34,5 +32,22 @@
         where course_id = #{courseId}
         and user_id = #{userId}
     </update>
+
+    <update id="updateMember" parameterType="member">
+        update t_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="arrive != null">arrive = #{arrive},</if>
+            <if test="resource != null">resource = #{resource},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where user_id = #{userId} and course_id = #{courseId}
+    </update>
+    <delete id="customDelete" parameterType="Member">
+        delete from t_member where user_id = #{userId} and course_id = #{courseId}
+    </delete>
 
 </mapper>

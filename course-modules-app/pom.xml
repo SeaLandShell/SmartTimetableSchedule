@@ -21,6 +21,7 @@
         <module>app-ctimetable</module>
         <module>app-zfcrawler</module>
         <module>app-cschedule</module>
+        <module>app-homework</module>
     </modules>
 
 </project>

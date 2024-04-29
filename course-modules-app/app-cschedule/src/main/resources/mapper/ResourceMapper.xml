@@ -9,4 +9,18 @@
         select * from t_resource
         where course_id = #{courseId}
     </select>
+
+    <update id="updateResource" parameterType="resource">
+        update t_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resId != null">res_id = #{resId},</if>
+            <if test="resName != null">res_name = #{resName},</if>
+            <if test="resSize != null">res_size = #{resSize},</if>
+            <if test="uploadTime != null">upload_time = #{uploadTime},</if>
+            <if test="downLink != null">down_link = #{downLink},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="courseId != null">course_id = #{courseId},</if>
+        </trim>
+        where res_id = #{resId}
+    </update>
 </mapper>

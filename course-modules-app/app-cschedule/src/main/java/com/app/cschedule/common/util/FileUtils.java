@@ -68,6 +68,16 @@ public class FileUtils {
     }
 
     /**
+     * 删除文件
+     * @param filePath 文件相对路径
+     * @throws IOException 删除文件时可能抛出的IOException
+     */
+    public static void deleteFile(String filePath) throws IOException {
+        Path fileToDelete = UPLOAD_PATH.resolve(filePath).normalize(); // 文件路径
+        Files.deleteIfExists(fileToDelete); // 如果文件存在，则删除文件
+    }
+
+    /**
      * 加载文件
      * @param path 文件相对路径
      * @return 文件

@@ -27,6 +27,9 @@ public interface CourseService extends IService<Course> {
      */
     Course searchCourse(String clazzNum);
 
+    Course searchCourseByCourseId(String courseId);
+
+
     /**
      * 创建课程
      */

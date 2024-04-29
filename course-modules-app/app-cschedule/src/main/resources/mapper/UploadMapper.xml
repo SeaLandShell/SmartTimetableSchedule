@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.app.cschedule.mapper.UploadMapper">
+
+    <resultMap type="upload" id="UploadResult">
+        <id property="id" column="id"/>
+        <result property="uploadId" column="upload_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="workId" column="work_id"/>
+        <result property="workName" column="work_name"/>
+        <result property="content" column="content"/>
+        <result property="linkResource" column="link_resource"/>
+        <result property="appraise" column="appraise"/>
+        <result property="criticism" column="criticism"/>
+        <result property="score" column="score"/>
+        <result property="review" column="review"/>
+        <result property="gmtCreate" column="gmt_create" />
+        <result property="gmtModified" column="gmt_modified" />
+    </resultMap>
+
+    <!-- 被其他mapper引用 -->
+    <select id="getUploadsByCourseId" parameterType="string" resultType="upload">
+        select * from t_upload
+        where course_id = #{courseId}
+    </select>
+
+
+
+    <select id="selectUploadByCourseIdUploadName" parameterType="map" resultMap="UploadResult">
+        select * from t_upload
+        where course_id = #{courseId} and work_id = #{workId} and user_id = #{userId}
+    </select>
+</mapper>

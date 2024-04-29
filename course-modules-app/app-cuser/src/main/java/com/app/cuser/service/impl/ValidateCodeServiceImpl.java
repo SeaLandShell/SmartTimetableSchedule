@@ -76,7 +76,6 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
             capStr = code = captchaProducer.createText();
             image = captchaProducer.createImage(capStr);
         }
-
         redisService.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
@@ -132,10 +131,9 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
         String captcha = redisService.getCacheObject(verifyKey);
         redisService.deleteObject(verifyKey);
-
         if (!code.equalsIgnoreCase(captcha))
         {
-            return AjaxResult.error("验证码错误或失效",new Object());
+            return AjaxResult.error("验证码错误,请稍后重试",new Object());
         }
         return AjaxResult.success("验证码验证成功",new Object());
     }

@@ -130,6 +130,7 @@ public class CollegeController {
                                                  @RequestParam("userID") int userID
     ) {
         ResponseWrap<List<Course>> resp = new ResponseWrap<>();
+//        System.out.println(calendarService.getCalendar(userID, term));
         return resp.setStatus(0)
                 .setData(new Gson().fromJson(calendarService.getCalendar(userID, term), new TypeToken<List<Course>>() {
                 }.getType()));

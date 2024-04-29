@@ -1,10 +1,7 @@
 package com.app.cschedule.model; // 定义包名
 
 import com.app.cschedule.common.util.FileUrlUtils; // 导入文件URL工具类
-import com.app.cschedule.entity.Course; // 导入课程实体类
-import com.app.cschedule.entity.Member; // 导入成员实体类
-import com.app.cschedule.entity.Notice; // 导入通知实体类
-import com.app.cschedule.entity.Resource; // 导入资源实体类
+import com.app.cschedule.entity.*;
 import com.google.common.base.Converter; // 导入Google Guava中的Converter类
 import lombok.Data; // 导入Lombok中的Data注解
 import org.springframework.beans.BeanUtils; // 导入Spring Framework中的BeanUtils类
@@ -29,6 +26,9 @@ public class CourseDTO { // 定义课程数据传输对象类
     private List<Member> members; // 成员列表
     private List<Resource> resources; // 资源列表
     private List<Notice> notices; // 通知列表
+    private List<Work> works;
+    private List<Upload> uploads;
+    private List<Mnotice> mnotices;
 
     // 需要获取服务器绝对地址
     public String getCoursePic() { // 获取课程图片的服务器绝对地址方法

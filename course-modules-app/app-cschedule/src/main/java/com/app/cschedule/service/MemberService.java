@@ -16,4 +16,8 @@ public interface MemberService extends IService<Member> {
      * 给学生评分
      */
     Member gradeStudent(Member scoreForm);
+
+    int updateMember(Member member);
+
+    int customDelete(Member member);
 }

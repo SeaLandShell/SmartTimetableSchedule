@@ -75,6 +75,15 @@ public interface CourseUserMapper
             "FROM course_user WHERE user_name = #{username}")
     CourseUser selectCourseUserByUsername(@Param("username") String username);
 
+    @Select("SELECT user_id AS userId, dept_id AS deptId, user_name AS userName, nick_name AS nickName, " +
+            "password AS password, user_type AS userType, email AS email, phonenumber AS phonenumber, " +
+            "stu_tu_number AS stuTuNumber, sex AS sex, avatar AS avatar, birthday AS birthday, " +
+            "status AS status, del_flag AS delFlag, login_ip AS loginIp, login_date AS loginDate, " +
+            "create_by AS createBy, create_time AS createTime, update_by AS updateBy, update_time AS updateTime, " +
+            "remark AS remark " +
+            "FROM course_user WHERE stu_tu_number = #{stuTuNumber}")
+    CourseUser selectCourseUserByStuTuNumber(@Param("stuTuNumber") String stuTuNumber);
+
     @Select("SELECT * FROM course_user WHERE phonenumber = #{phone}")
     @Results(id = "CourseUserResultOne", value = {
             @Result(property = "userId", column = "user_id"),

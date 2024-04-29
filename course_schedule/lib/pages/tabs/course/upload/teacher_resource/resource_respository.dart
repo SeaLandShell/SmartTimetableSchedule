@@ -1,27 +1,21 @@
-import 'package:course_schedule/db/dao/member_dao.dart';
 import 'package:course_schedule/model/index.dart';
-import 'package:course_schedule/model/memberDTO.dart';
-import 'package:course_schedule/model/resource.dart';
 import 'package:course_schedule/net/apiClientSchedule.dart';
-import 'package:course_schedule/pages/tabs/course/upload/photo_document_preview.dart';
-import 'package:course_schedule/pages/tabs/plan/today_course.dart';
-import 'package:add_calendar_event/add_calendar_event.dart'; // 导入添加日历事件的库
-import 'package:flutter/material.dart';
+import 'package:course_schedule/pages/tabs/course/upload/teacher_resource/photo_document_preview.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_custom_cards/flutter_custom_cards.dart';
 import 'package:shine_flutter/shine_flutter.dart';
 import 'package:tbib_downloader/tbib_downloader.dart';
 
-import '../../../../components/card_view.dart';
-import '../../../../components/clipper/bottom_curve_clipper.dart';
-import '../../../../components/item_button.dart';
-import '../../../../data/values.dart';
-import '../../../../model/member.dart';
-import '../../../../provider/store.dart';
-import '../../../../utils/device_type.dart';
-import '../../../../utils/dialog_util.dart';
-import '../../../../utils/http_util.dart';
-import '../../../../utils/util.dart';
+import '../../../../../components/card_view.dart';
+import '../../../../../components/clipper/bottom_curve_clipper.dart';
+import '../../../../../data/values.dart';
+import '../../../../../db/database_manager.dart';
+import '../../../../../db/domain/user_db.dart';
+import '../../../../../utils/dialog_util.dart';
+import '../../../../../utils/http_util.dart';
+import '../../../../../utils/shared_preferences_util.dart';
+import '../../../../../utils/util.dart';
 enum FileType {
   any,
   media,
@@ -50,12 +44,25 @@ class _ResourceRespositoryPageState extends State<ResourceRespositoryPage> {
   String ext = "jpg";
 
   bool _loading = true; // 是否正在加载数据的标志
+  bool isTeacher = false;
   final List<Resource> _data = [];
 
   @override
   void initState() {
     super.initState();
+    isTeacherOrStu();
     getCourseDetail();
+  }
+  void isTeacherOrStu() async {
+    int userID = await SharedPreferencesUtil.getPreference('userID', 0);
+    UserDb? user = await DataBaseManager.queryUserById(userID);
+    if(user?.userType=="01"){
+      setState(() {isTeacher = true;});
+    }else{
+      setState(() {
+        isTeacher = false;
+      });
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -202,8 +209,9 @@ class _ResourceRespositoryPageState extends State<ResourceRespositoryPage> {
                       horizontal: 16.0,
                       vertical: 8.0,
                     ),
-                    child: Text(
-                      """发布时间：${_data[index].uploadTime}""",
+                    child: Text(isTeacher?
+                      """发布时间：${_data[index].uploadTime}
+所有成员查看次数：${_data[index].experience}次""" : """发布时间：${_data[index].uploadTime}""",
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
@@ -216,6 +224,30 @@ class _ResourceRespositoryPageState extends State<ResourceRespositoryPage> {
                   buttonHeight: 52.0,
                   buttonMinWidth: 90.0,
                   children: <Widget>[
+                    TextButton(
+                      style: flatButtonStyle,
+                      onPressed: () {
+                        DialogUtil.showConfirmDialog(context, "确定删除资源${_data[index].resName}吗？", () async {
+                          if(await ApiClientSchdedule.resourceDelete(_data[index].resId)>0){
+                            Util.showToastCourse("删除资源${_data[index].resName}成功！", context);
+                            setState(() {
+                              _data.clear();
+                              _loading=false;
+                              getCourseDetail();
+                            });
+                          }
+                        });
+                      },
+                      child: const Column(
+                        children: <Widget>[
+                          Icon(Icons.delete_forever_rounded,color: Colors.red,),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.0),
+                          ),
+                          Text('删除',style: TextStyle(color: Colors.red),),
+                        ],
+                      ),
+                    ),
                     TextButton(
                       style: flatButtonStyle,
                       onPressed: () {

@@ -133,4 +133,15 @@ class Store extends ChangeNotifier {
     // 获取只读模式的Store实例
     return getInstance(context, listen: false); // 使用Provider获取Store实例
   }
+
+  Future<void> updateLoginState() async {
+    _courses = [];
+    SharedPreferencesUtil.remove('userID');
+    SharedPreferencesUtil.remove('phoneNumber');
+    SharedPreferencesUtil.remove('college_name');
+    final directory = (await getApplicationDocumentsDirectory()).path;
+    final path = "$directory/json/$COURSE_JSON_FILE_NAME";
+    FileUtil.delete(path);
+    notifyListeners();
+  }
 }

@@ -108,14 +108,17 @@ class HttpUtil {
           } else {
             // 如果上下文对象不为空
             if(!TextUtil.isEmpty(resp["msg"])){
-              DialogUtil.showTipDialog(context, resp["msg"]); // 显示提示对话框
+              Util.showToastCourse(resp["msg"],context); // 显示提示对话框
             }else{
-              DialogUtil.showTipDialog(context, resp["message"]); // 显示提示对话框
+              Util.showToastCourse(resp["message"],context); // 显示提示对话框
             }
           }
         } else {
-          // 如果以普通模式显示错误消息
-          Util.showToastCourse(resp["msg"],context as BuildContext); // 显示普通提示消息
+          if(!TextUtil.isEmpty(resp["msg"])){
+            DialogUtil.showToast(resp['msg']); // 显示提示对话框
+          }else{
+            DialogUtil.showToast(resp['message']); // 显示提示对话框
+          }
         }
       }
       return null; // 返回空值

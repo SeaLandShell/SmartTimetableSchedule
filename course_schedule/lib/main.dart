@@ -7,7 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tbib_file_uploader/tbib_file_uploader.dart';
 import './routers/routers.dart';
@@ -18,8 +20,14 @@ Future<void> main() async {
 // Importing 'package:flutter/widgets.dart' is required.
 //Flutter应用程序中的一种约定，用于确保Flutter应用程序已经初始化完成。通常情况下，它被用于在使用Flutter框架之前执行一些必要的初始化操作，例如初始化插件或执行异步操作。
   WidgetsFlutterBinding.ensureInitialized();
+  // 腾讯文件预览
   await TBIBFileUploader().init();
   await TBIBDownloader().init();
+  // 存储平台
+  HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: kIsWeb
+          ? HydratedStorage.webStorageDirectory
+          : await getApplicationDocumentsDirectory(),);
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }

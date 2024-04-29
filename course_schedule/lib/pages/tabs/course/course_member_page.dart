@@ -1,19 +1,19 @@
-import 'package:course_schedule/db/dao/member_dao.dart';
+import 'package:course_schedule/db/database_manager.dart';
+import 'package:course_schedule/db/domain/user_db.dart';
 import 'package:course_schedule/model/index.dart';
 import 'package:course_schedule/model/memberDTO.dart';
+import 'package:course_schedule/net/apiClient.dart';
 import 'package:course_schedule/net/apiClientSchedule.dart';
-import 'package:course_schedule/pages/tabs/plan/today_course.dart';
-import 'package:add_calendar_event/add_calendar_event.dart'; // 导入添加日历事件的库
-import 'package:flutter/material.dart';
+import 'package:course_schedule/utils/shared_preferences_util.dart';
+import 'package:dio/dio.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 import '../../../components/card_view.dart';
 import '../../../components/clipper/bottom_curve_clipper.dart';
 import '../../../components/item_button.dart';
 import '../../../data/values.dart';
-import '../../../model/member.dart';
-import '../../../provider/store.dart';
-import '../../../utils/device_type.dart';
 import '../../../utils/dialog_util.dart';
 import '../../../utils/http_util.dart';
 import '../../../utils/util.dart';
@@ -33,13 +33,33 @@ class _CourseMemberPageState extends State<CourseMemberPage> {
   double statusBarHeight = 0;
   double screenHeight = 0;
   double bottomNavBarHeight = 0;
+  int attendance_count=0;
+  int userId =0;
   bool _loading = true; // 是否正在加载数据的标志
+  bool isTeacher = false;
+  ApiClient apiClient=ApiClient();
   final List<MemberDto> _data = []; // 学校数据列表
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _signCodeController = TextEditingController();
+  final TextEditingController _tuStuNumberController = TextEditingController();
   @override
   void initState() {
     super.initState();
+    isTeacherStu();
     getCourseDetail();
+    getAttendanceAccount();
+  }
+  void isTeacherStu() async{
+    int userid = await SharedPreferencesUtil.getPreference('userID', 0);
+    UserDb? user = await DataBaseManager.queryUserById(userid);
+    setState(() {
+      if(user!.userType=="01"){
+        isTeacher = true;
+      }else{
+        isTeacher = false;
+      }
+      userId = userid;
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -125,33 +145,165 @@ class _CourseMemberPageState extends State<CourseMemberPage> {
           children: [
             ItemButton(
               onClick: () {
+
               },
-              title: '签到',
+              title: '扫码签到',
+              icon: Icon(
+                Icons.qr_code_2_rounded,
+                color: Colors.blue.shade400,
+              ),
+            ),
+            ItemButton(
+              onClick: isTeacher ?  () async {
+                DialogUtil.showCustomWidgetDialog(context, "签到码申领时长(分钟)", signCodeForm(),() async {
+                  const regexTeacherCourse = r'(\d+)';
+                  final pattern = RegExp(regexTeacherCourse);
+                  final match = pattern.firstMatch(_signCodeController.text.trim());
+                  if (match == null) {
+                    Util.showToastCourse("只允许输入数字", context);
+                    return;
+                  }
+                  if(_formKey.currentState!.validate()){
+                    int timeMinute = int.parse(_signCodeController.text.trim());
+                    final resp = await HttpUtil.client.get("/cschedule/classes/signCode?timeMinute=$timeMinute&courseId=${widget.schedule.courseId}");
+                    int signCode = HttpUtil.getDataFromResponse(resp.toString());
+                    if (signCode != null) {
+                      DialogUtil.showTipDialog(context, "签到码为：${signCode}，签到码有效时长为${timeMinute}分钟，请告知给本课程学生！");
+                    }
+                    Util.showToastCourse("申领成功！", context);
+                  }
+                });
+                // bool applyCode = false;
+                // DialogUtil.showConfirmDialog(context, "申领2分钟签到码?", () {
+                //   setState(() {
+                //     applyCode = true;
+                //   });
+                // }).then((value) async {
+                //   if (value == DialogResult.OK && applyCode) {
+                //
+                //   }
+                // });
+              } : (){
+                DialogUtil.showCustomWidgetDialog(context, "输入签到码", signCodeForm(),() async {
+                  const regex = r'(\d{6})';
+                  final pattern = RegExp(regex);
+                  final match = pattern.firstMatch(_signCodeController.text.trim());
+                  if (match == null) {
+                    Util.showToastCourse("只允许输入6位数字", context);
+                    return;
+                  }
+                  if(_formKey.currentState!.validate()){
+                    if(_signCodeController.text.trim()!=""){
+                      int signCode = int.parse(_signCodeController.text.trim());
+                      final resp = await HttpUtil.client.post("/cschedule/members/attendance",
+                      data: FormData.fromMap({
+                        'userId': userId,
+                        'courseId': widget.schedule.courseId,
+                        'code': signCode,
+                      }),);
+                      print(resp.toString());
+                      final data = HttpUtil.getDataFromResponse(resp.toString());
+                      Member member = Member.fromJson(data);
+                      if(member!=null){
+                        getCourseDetail();
+                        Util.showToastCourse("签到成功！", context);
+                      }
+                    }
+                  }
+                  // int signCode = HttpUtil.getDataFromResponse(resp.toString());
+                });
+              },
+              title: '签到码',
               icon: Icon(
                 Icons.assignment_turned_in_rounded,
                 color: Colors.blue.shade400,
               ),
             ),
-            ItemButton(
-              onClick: () {
-              },
-              title: '小组方案',
-              icon: Icon(
-                Icons.group,
-                color: Colors.orange.shade400,
+            if(isTeacher)
+              ItemButton(
+                onClick: () {
+                  DialogUtil.showCustomWidgetDialog(context, "输入成员学工号", addMemberToScheduleWidget(),() async {
+                    const regex = r'(\d+)';
+                    final pattern = RegExp(regex);
+                    final match = pattern.firstMatch(_tuStuNumberController.text.trim());
+                    if (match == null) {
+                      Util.showToastCourse("学工号只允许输入数字", context);
+                      return;
+                    }
+                    if(_formKey.currentState!.validate()){
+                      if(_tuStuNumberController.text.trim()!=""){
+                        String tuStuNumber = _tuStuNumberController.text.trim();
+                        User userr = await apiClient.searchUserByTuStuNumber(tuStuNumber);
+                        UserDb user = UserDb.fromJson(userr.data);
+                        // print(user.toJson());
+                        List<MemberDto> filteredMembers = _data.where((member) => member.userId == user.userId && member.courseId == widget.schedule.courseId).toList();
+                        if(filteredMembers.isNotEmpty){
+                          Util.showToastCourse("成员已存在", context);
+                          return;
+                        }
+                        Member member = Member();
+                        member.userId = user.userId;
+                        member.courseId = widget.schedule.courseId;
+                        Member? mem = await ApiClientSchdedule.addMember(member);
+                        if(mem!=null){
+                          getCourseDetail();
+                          DialogUtil.showTipDialog(context, '''成员：${user.userName}加入成功！
+请通知该成员使用本课程云课号${widget.schedule.courseNum}进入本课程！
+                          ''');
+                        }
+                      }
+                    }
+                  });
+                },
+                title: '添加成员',
+                icon: Icon(
+                  Icons.group,
+                  color: Colors.cyan,
+                ),
               ),
-            ),
-            ItemButton(
-              onClick: () {
-              },
-              title: '挂科预警',
-              icon: Icon(
-                Icons.health_and_safety_rounded,
-                color: Colors.red.shade400,
-              ),
-            ),
+            // ItemButton(
+            //   onClick: () {
+            //   },
+            //   title: '挂科预警',
+            //   icon: Icon(
+            //     Icons.health_and_safety_rounded,
+            //     color: Colors.red.shade400,
+            //   ),
+            // ),
           ],
         ),
+      ),
+    );
+  }
+  Widget signCodeForm(){
+    return Form(
+      key: _formKey, // 绑定表单Key
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextFormField(
+            autovalidateMode: AutovalidateMode.disabled, // 禁用自动验证模式
+            controller: _signCodeController,
+            decoration: InputDecoration(labelText: '只允许输入数字',prefixIcon: const Icon(Icons.drive_file_rename_outline_rounded),),
+            validator: RequiredValidator(errorText: "只允许输入数字"),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget addMemberToScheduleWidget(){
+    return Form(
+      key: _formKey, // 绑定表单Key
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextFormField(
+            autovalidateMode: AutovalidateMode.disabled, // 禁用自动验证模式
+            controller: _tuStuNumberController,
+            decoration: InputDecoration(labelText: '学号只允许输入数字',prefixIcon: const Icon(Icons.drive_file_rename_outline_rounded),),
+            validator: RequiredValidator(errorText: "学号只允许输入数字"),
+          ),
+        ],
       ),
     );
   }
@@ -176,7 +328,7 @@ class _CourseMemberPageState extends State<CourseMemberPage> {
       return Center(child: CircularProgressIndicator()); // 显示加载指示器
     }
     double height = screenHeight - statusBarHeight - topMargin - TodayCourseCardHeight - bottomNavBarHeight - 310;
-    print('我是成员列表栏目所占高度:$height');
+    // print('我是成员列表栏目所占高度:$height');
     return Container(
       height: height, // 设置一个固定的高度
       child: ListView.builder(
@@ -219,48 +371,66 @@ class _CourseMemberPageState extends State<CourseMemberPage> {
                   buttonHeight: 52.0,
                   buttonMinWidth: 90.0,
                   children: <Widget>[
+                    if(isTeacher)
                     TextButton(
                       style: flatButtonStyle,
                       onPressed: () {
-                        cardB.currentState?.expand();
+                        // cardB.currentState?.toggleExpansion();
+                        DialogUtil.showConfirmDialog(context, "确定从本课程中移除成员${_data[index].stuName}吗？", () async {
+                          Member member = Member();
+                          member.userId = _data[index].userId;
+                          member.courseId = _data[index].courseId;
+                          member.arrive = _data[index].arrive;
+                          member.resource = _data[index].resource;
+                          member.experience = _data[index].experience;
+                          member.score = _data[index].score;
+                          member.remark = _data[index].remark;
+                          int res = await ApiClientSchdedule.customDelete(member);
+                          if(res>0){
+                            Util.showToastCourse("移除成功！", context);
+                          }
+                        });
                       },
                       child: const Column(
                         children: <Widget>[
-                          Icon(Icons.arrow_downward,color: Colors.blue,),
+                          Icon(Icons.error,color: Colors.red,),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.0),
                           ),
-                          Text('Open'),
+                          Text('移除'),
                         ],
                       ),
                     ),
-                    TextButton(
-                      style: flatButtonStyle,
-                      onPressed: () {
-                        cardB.currentState?.collapse();
-                      },
-                      child: const Column(
-                        children: <Widget>[
-                          Icon(Icons.arrow_upward),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2.0),
-                          ),
-                          Text('Close'),
-                        ],
-                      ),
+                    Column(
+                      children: <Widget>[
+                        Icon(Icons.score_rounded,color: Colors.blue,),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                        ),
+                        Text('资源经验值'),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                        ),
+                        Text('${_data[index].experience}'),
+                      ],
                     ),
-                    TextButton(
-                      style: flatButtonStyle,
-                      onPressed: () {
-                        cardB.currentState?.toggleExpansion();
-                      },
-                      child: const Column(
+                    Container(
+                      // style: flatButtonStyle,
+                      // onPressed: () {
+                      //   // 目前毕业设计只设置签到操作与和简单显示功能，不设置补签功能与显示历史签到功能。
+                      //   // cardB.currentState?.expand();
+                      // },
+                      child: Column(
                         children: <Widget>[
-                          Icon(Icons.swap_vert),
+                          Icon(Icons.co_present_rounded,color: Colors.blue,),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.0),
                           ),
-                          Text('Toggle'),
+                          Text('签到次数/考勤次数'),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.0),
+                          ),
+                          Text('${_data[index].arrive}/${attendance_count}'),
                         ],
                       ),
                     ),
@@ -282,13 +452,14 @@ class _CourseMemberPageState extends State<CourseMemberPage> {
           data: {
             'courseId': widget.schedule.courseId,
           });
+      // log(resp.toString());
       final data = HttpUtil.getDataFromResponse(resp.toString()); // 解析响应数据
       if (data['members'] is List) {
         // 如果数据是列表类型
         setState(() {
           _data.clear(); // 清空数据列表
           for(var i=0;i<data['members'].length;i++){
-            print('我是MemberDTO$i:${MemberDto.fromJson(data['members'][i]).toJson()}');
+            // print('我是MemberDTO$i:${MemberDto.fromJson(data['members'][i]).toJson()}');
             _data.add(MemberDto.fromJson(data['members'][i]));
           }
           _loading = false; // 加载完成，更新_loading状态为false
@@ -299,6 +470,21 @@ class _CourseMemberPageState extends State<CourseMemberPage> {
       setState(() {
         _loading = false; // 加载完成，更新_loading状态为false
       });
+    }
+  }
+  void getAttendanceAccount()async{
+    try {
+      final resp = await HttpUtil.client.get(
+          "/cschedule/classes/signCount?courseId=${widget.schedule.courseId}");
+      final data = HttpUtil.getDataFromResponse(resp.toString()); // 解析响应数据
+      if (data!=null) {
+        // 如果数据是列表类型
+        setState(() {
+          attendance_count = data;
+        });
+      }
+    }catch (e) {
+      print(e); // 打印错误信息
     }
   }
   List<Widget> _buildExpansionTileCard(List<Member> list_member) {

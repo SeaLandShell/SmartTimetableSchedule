@@ -67,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body:SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        child: SafeArea( // 使用 SafeArea 处理安全区域
           child: Container(
             height: MediaQuery.of(context).size.height - AppBar().preferredSize.height, // 减去AppBar高度
             decoration: BoxDecoration(
@@ -157,12 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: const InputDecoration(
                           hintText: '请输入验证码', // 输入框提示文本
                         ),
-                        validator: (value) { // 验证器：检查输入是否合法
-                          if (value == null || value.isEmpty) { // 如果输入为空
-                            return '请输入验证码'; // 提示用户输入密码
-                          }
-                          return null; // 输入合法，返回 null
-                        },
+                        validator: RequiredValidator(errorText: "必填"),
                       ),
                     ),
                     Expanded(
@@ -321,7 +315,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
       ),
     );
   }

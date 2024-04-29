@@ -1,17 +1,12 @@
-import 'dart:math'; // 导入dart:math库，用于数学计算
-
 import 'package:course_schedule/db/database_manager.dart';
-import 'package:course_schedule/model/index.dart';
-import 'package:course_schedule/model/member.dart';
-import 'package:course_schedule/utils/shared_preferences_util.dart';
-import 'package:flutter/cupertino.dart'; // 导入Flutter的Cupertino库，用于iOS风格的UI组件
-import 'package:flutter/material.dart'; // 导入Flutter的material库，包含Flutter应用程序的基本组件和风格
-import 'package:course_schedule/components/pickerview/picker_view.dart'; // 导入自定义的PickerView组件
-import 'package:course_schedule/components/pickerview/picker_view_popup.dart'; // 导入自定义的PickerViewPopup组件
+import 'package:course_schedule/db/domain/user_db.dart';
 import 'package:course_schedule/model/course.dart'; // 导入课程模型类
+import 'package:course_schedule/model/index.dart';
 import 'package:course_schedule/provider/store.dart'; // 导入Store提供者类，用于管理课程数据状态
 import 'package:course_schedule/utils/dialog_util.dart'; // 导入对话框工具类，用于显示对话框
+import 'package:course_schedule/utils/shared_preferences_util.dart';
 import 'package:course_schedule/utils/util.dart'; // 导入工具类，包含一些常用的工具方法
+import 'package:flutter/material.dart'; // 导入Flutter的material库，包含Flutter应用程序的基本组件和风格
 import 'package:flutter/services.dart';
 
 import '../../../net/apiClientSchedule.dart'; // 导入Flutter的services库，用于访问底层系统服务
@@ -287,6 +282,7 @@ class _CourseImportPageState extends State<CourseImportPage> {
       return;
     });
   }
+
   Future<void> _saveActionStu() async {
     // 保存操作的方法
     Util.cancelFocus(context); // 取消焦点
@@ -297,10 +293,12 @@ class _CourseImportPageState extends State<CourseImportPage> {
     }
     Member member = Member();
     member.userId = await SharedPreferencesUtil.getPreference('userID', 0);
+    UserDb? user = await DataBaseManager.queryUserById(member.userId!);
+    member.remark = user?.remark??"";
     // 远程查找是否有该课程
     Schedule? sche = await ApiClientSchdedule.searchCourse(_courseNumController.text.trim());
     if(sche==null){
-      Util.showToastCourse("请输入正确的云课号！", context);
+      Util.showToastCourse("该课程未开通或云课号错误！", context);
       return;
     }
     member.courseId = sche.courseId;

@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:file_preview/file_preview.dart';
 
-import '../../../../components/card_view.dart';
-import '../../../../components/clipper/bottom_curve_clipper.dart';
-import '../../../../data/values.dart';
+import '../../../../../components/card_view.dart';
+import '../../../../../components/clipper/bottom_curve_clipper.dart';
+import '../../../../../data/values.dart';
 import 'dart:io';
 
 

@@ -7,9 +7,13 @@ import 'package:course_schedule/pages/tabs/course/course_detail_page.dart';
 import 'package:course_schedule/pages/tabs/course/course_interact_page.dart';
 import 'package:course_schedule/pages/tabs/course/course_member_page.dart';
 import 'package:course_schedule/pages/tabs/course/course_recourse_page.dart';
+import 'package:course_schedule/pages/tabs/course/upload/teacherwork/publish_homework.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/values.dart';
+import '../../../db/database_manager.dart';
+import '../../../db/domain/user_db.dart';
+import '../../../utils/shared_preferences_util.dart';
 
 class CoursePage extends StatefulWidget {
   final int index;
@@ -20,14 +24,15 @@ class CoursePage extends StatefulWidget {
   @override
   State<CoursePage> createState() => _CoursePageState();
 }
-
 class _CoursePageState extends State<CoursePage> {
+  bool isTeacher = false;
   late int _currentIndex;
   late List<Widget> _pages;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    isTeacherOrStu();
     _currentIndex=widget.index;
     _pages = [
       CourseRecoursePage(schedule: widget.schedule),
@@ -38,10 +43,33 @@ class _CoursePageState extends State<CoursePage> {
     ];
     // print("我是当前课程课堂页：${widget.schedule.toJson()}");
   }
+  void isTeacherOrStu() async {
+    int userID = await SharedPreferencesUtil.getPreference('userID', 0);
+    UserDb? user = await DataBaseManager.queryUserById(userID);
+    if(user?.userType=="01"){
+      setState(() {isTeacher = true;});
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.className)),
+      appBar: AppBar(
+        title: Text(widget.className),
+        actions: [
+          if(_currentIndex==2 && isTeacher)
+            GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return PublishHomeworkPage(schedule: widget.schedule);
+                }),);
+              },
+              child: SizedBox( // 使用SizedBox设置Tab的宽度
+                width: 90, // 屏幕宽度除以Tab数量
+                child: Center(child: Text("编辑作业",style: TextStyle(color: Colors.black,fontSize: 16),)),
+              ),
+            ),
+        ],
+      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           fixedColor: Colors.blue, //选中的颜色

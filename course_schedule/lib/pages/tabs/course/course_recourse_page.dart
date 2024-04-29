@@ -2,25 +2,22 @@
 // https://github.com/pktintali/flutter_custom_cards
 // https://github.com/fluttercandies/flutter_wechat_assets_picker/blob/main/README-ZH.md
 
-import 'dart:developer';
+import 'dart:io';
 
-import 'package:course_schedule/db/dao/member_dao.dart';
+import 'package:capped_progress_indicator/capped_progress_indicator.dart';
 import 'package:course_schedule/model/index.dart';
-import 'package:course_schedule/model/memberDTO.dart';
-import 'package:course_schedule/model/resource.dart';
 import 'package:course_schedule/net/apiClientSchedule.dart';
-import 'package:course_schedule/pages/tabs/course/upload/photo_document_upload.dart';
-import 'package:course_schedule/pages/tabs/course/upload/resource_respository.dart';
-import 'package:course_schedule/pages/tabs/course/upload/web_upload.dart';
-import 'package:course_schedule/pages/tabs/plan/today_course.dart';
-import 'package:add_calendar_event/add_calendar_event.dart'; // 导入添加日历事件的库
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:course_schedule/pages/tabs/course/upload/teacher_resource/photo_document_preview.dart';
+import 'package:course_schedule/pages/tabs/course/upload/teacher_resource/photo_document_upload.dart';
+import 'package:course_schedule/pages/tabs/course/upload/teacher_resource/resource_respository.dart';
+import 'package:course_schedule/pages/tabs/course/upload/teacher_resource/web_upload.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_custom_cards/flutter_custom_cards.dart';
 import 'package:shine_flutter/shine_flutter.dart';
 import 'package:tbib_downloader/tbib_downloader.dart';
 import 'package:tbib_file_uploader/tbib_file_uploader.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../../../components/card_view.dart';
 import '../../../components/clipper/bottom_curve_clipper.dart';
@@ -28,16 +25,9 @@ import '../../../components/item_button.dart';
 import '../../../data/values.dart';
 import '../../../db/database_manager.dart';
 import '../../../db/domain/user_db.dart';
-import '../../../model/member.dart';
-import '../../../provider/store.dart';
-import '../../../utils/device_type.dart';
-import '../../../utils/dialog_util.dart';
 import '../../../utils/http_util.dart';
 import '../../../utils/shared_preferences_util.dart';
 import '../../../utils/util.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
-import 'package:capped_progress_indicator/capped_progress_indicator.dart';
-import 'dart:io';
 
 
 
@@ -57,9 +47,12 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
   double screenHeight = 0;
   double bottomNavBarHeight = 0;
   double progress = 0;
+  int userId = 0;
+  int resourceLearnCount = 0;
   String ext = "jpg";
   bool _loading = true; // 是否正在加载数据的标志
   bool isTeacher = false;
+  bool hasLearn = false;
   final List<Resource> _data = [];
   bool hide = false;
   File? selectedFile;
@@ -70,10 +63,15 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
     super.initState();
     isTeacherOrStu();
     getCourseDetail();
-    print("我是当前资源页Schedule：${widget.schedule.toJson()}");
+    resourcehasLearnCount();
+    // print("我是当前资源页Schedule：${widget.schedule.toJson()}");
   }
   void isTeacherOrStu() async {
-    UserDb? user = await DataBaseManager.queryUserById(await SharedPreferencesUtil.getPreference('userID', 0));
+    int userID = await SharedPreferencesUtil.getPreference('userID', 0);
+    UserDb? user = await DataBaseManager.queryUserById(userID);
+    setState(() {
+      userId = userID;
+    });
     if(user?.userType=="01"){
       setState(() {isTeacher = true;});
     }
@@ -83,7 +81,6 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
     statusBarHeight = MediaQuery.of(context).padding.top; // 获取状态栏高度
     screenHeight = MediaQuery.of(context).size.height;
     bottomNavBarHeight = MediaQuery.of(context).padding.bottom;
-
     return Container(
         color: Values.bgWhite, // 设置背景颜色为白色
         child: Stack(
@@ -117,8 +114,7 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
                   child: isTeacher? _buildResourceDetailTeacherOpTool() : _buildResourceDetailOpTool(), // 构建提醒工具
                 ),
                 isTeacher? const Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     child: Text("提示",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),), // 构建提醒工具
                     ) : Padding(
                   padding: const EdgeInsets.fromLTRB(28, 0, 0, 16),
@@ -159,6 +155,10 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
     );
   }
   CardView _buildResourceDetailOpTool() {
+    double value=0.0001;
+    if(resourceLearnCount!=0 && _data.length!=0){
+      value = resourceLearnCount/_data.length;
+    }
     return CardView(
       title: "资源学习进度",
       child: Padding(
@@ -166,7 +166,7 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center, // 主轴居中对齐
           children: [
-            LinearCappedProgressIndicator(value: 0.1, minHeight: 5,backgroundColor: Colors.blueGrey.shade100 ,color: Colors.lightBlue ,),
+            LinearCappedProgressIndicator(value: value.toDouble(), minHeight: 5,backgroundColor: Colors.blueGrey.shade100 ,color: Colors.lightBlue ,),
             SizedBox(height: 10,),
             Row(
               children: [
@@ -181,7 +181,7 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
                     child: Padding(
                       padding: EdgeInsets.only(right: 0.0),
                       child: Text(
-                        '已学习资源数？个',
+                        '已学习资源数$resourceLearnCount个',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
@@ -321,7 +321,7 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
                       selectImageGallery: false,
                     );
                   },
-                  title: '文档',
+                  title: '文件',
                   icon: Icon(
                     Icons.file_upload_rounded,
                     color: Colors.lightGreen.shade800,
@@ -480,10 +480,41 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
                   buttonHeight: 52.0,
                   buttonMinWidth: 90.0,
                   children: <Widget>[
+                    // if(!isTeacher)
+                    //   hasLearn? Column(
+                    //     children: <Widget>[
+                    //       Icon(Icons.done_rounded,color: Colors.red,),
+                    //       Padding(
+                    //         padding: EdgeInsets.symmetric(vertical: 2.0),
+                    //       ),
+                    //       Text('已学习'),
+                    //     ],
+                    //   ):Column(
+                    //     children: <Widget>[
+                    //       Icon(Icons.tips_and_updates_rounded,color: Colors.blue,),
+                    //       Padding(
+                    //         padding: EdgeInsets.symmetric(vertical: 2.0),
+                    //       ),
+                    //       Text('待学习'),
+                    //     ],
+                    //   ),
                     TextButton(
                       style: flatButtonStyle,
-                      onPressed: () {
-
+                      onPressed: () async {
+                        int count = await ApiClientSchdedule.resourceLearnCount(userId, widget.schedule.courseId!,_data[index].resId);
+                        if(count==0){
+                          setState(() {
+                            hasLearn = true;
+                          });
+                        }else{
+                          setState(() {
+                            resourceLearnCount = count;
+                          });
+                        }
+                        ApiClientSchdedule.expirence(userId, widget.schedule.courseId!,_data[index].resId);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return PhotoDocumentPreviewPage(fileUrl: link, schedule: widget.schedule);
+                        }),);
                       },
                       child: const Column(
                         children: <Widget>[
@@ -498,6 +529,17 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
                     TextButton(
                       style: flatButtonStyle,
                       onPressed: () async {
+                        int count = await ApiClientSchdedule.resourceLearnCount(userId, widget.schedule.courseId!,_data[index].resId);
+                        if(count==0){
+                          setState(() {
+                            hasLearn = true;
+                          });
+                        }else{
+                          setState(() {
+                            resourceLearnCount = count;
+                          });
+                        }
+                        ApiClientSchdedule.expirence(userId, widget.schedule.courseId!,_data[index].resId);
                         String filePath = await TBIBDownloader().downloadFile(
                           context: context,
                           url: _data[index].downLink,
@@ -565,6 +607,23 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
       setState(() {
         _loading = false; // 加载完成，更新_loading状态为false
       });
+    }
+  }
+
+//   资源学习个数总数
+  void resourcehasLearnCount()async{
+    try {
+      final resp = await HttpUtil.client.get(
+          "/cschedule/members/resourcehasLearnCount?userId=${await SharedPreferencesUtil.getPreference("userID", 0)}&courseId=${widget.schedule.courseId}",);
+      final data = HttpUtil.getDataFromResponse(resp.toString()); // 解析响应数据
+      if (data!=null) {
+        // 如果数据是列表类型
+        setState(() {
+          resourceLearnCount = data;
+        });
+      }
+    } catch (e) {
+      print(e); // 打印错误信息
     }
   }
 }

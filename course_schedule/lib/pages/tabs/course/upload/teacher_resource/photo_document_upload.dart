@@ -2,23 +2,24 @@
 // https://github.com/pktintali/flutter_custom_cards
 // https://github.com/fluttercandies/flutter_wechat_assets_picker/blob/main/README-ZH.md
 
+import 'dart:io';
+
 import 'package:course_schedule/model/index.dart';
 import 'package:course_schedule/model/memberDTO.dart';
 import 'package:course_schedule/net/apiClientSchedule.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:course_schedule/net/globalVariables.dart';
+import 'package:file_preview/file_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:file_preview/file_preview.dart';
 
-import '../../../../components/card_view.dart';
-import '../../../../components/clipper/bottom_curve_clipper.dart';
-import '../../../../data/values.dart';
-import '../../../../db/database_manager.dart';
-import '../../../../db/domain/user_db.dart';
-import '../../../../utils/shared_preferences_util.dart';
-import '../../../../utils/util.dart';
-import 'dart:io';
+import '../../../../../../components/card_view.dart';
+import '../../../../../components/clipper/bottom_curve_clipper.dart';
+import '../../../../../data/values.dart';
+import '../../../../../db/database_manager.dart';
+import '../../../../../db/domain/user_db.dart';
+import '../../../../../utils/shared_preferences_util.dart';
+import '../../../../../utils/util.dart';
 
 
 
@@ -41,7 +42,7 @@ class _PhotoDocumentUploadPageState extends State<PhotoDocumentUploadPage> {
   double bottomNavBarHeight = 0;
   String fileName = "";
   String? version;
-  final String liscenKey = "nedHkix1XlQ5jxf7dkPu2dQdsJ59VfjWWjE6euOSM4F5WPzZ8eC+SlFcy14xC2i8";
+  final String liscenKey = GlobalVariables.liscenKey;
   bool _loading = true; // 是否正在加载数据的标志
   bool isImg = true;
   bool isTeacher = false;

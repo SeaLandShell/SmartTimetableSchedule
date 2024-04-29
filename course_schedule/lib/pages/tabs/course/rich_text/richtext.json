@@ -1,0 +1,18 @@
+[
+  {
+    "message": "智课表富文本编辑器",
+    "richTexts": {
+      "color": "#e60000",
+      "textSize": 32
+    },
+    "insert": "\n"
+  },
+  {
+    "message": "富文本好像是个大坑",
+    "richTexts": {
+      "color": "rgba(32, 54, 190, 1)",
+      "textSize": 24
+    },
+    "insert": "\n"
+  }
+]

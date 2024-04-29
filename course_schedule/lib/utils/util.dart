@@ -24,21 +24,6 @@ class Util {
   }
 
   /// 显示 Toast 消息
-  // static void showToast(String? msg) {
-  //   if (TextUtil.isEmpty(msg)) {
-  //     return;
-  //   }
-  //   Fluttertoast.showToast(
-  //     msg: msg!,
-  //     toastLength: Toast.LENGTH_SHORT,
-  //     gravity: ToastGravity.BOTTOM,
-  //     timeInSecForIosWeb: 1,
-  //     backgroundColor: Colors.white,
-  //     textColor: Colors.black87,
-  //     fontSize: 16.0,
-  //   );
-  // }
-  /// 显示 Toast 消息
   static void showToastCourse(String? msg, BuildContext context) {
     // 检查消息是否为空或null
     if (TextUtil.isEmpty(msg)) {
@@ -60,46 +45,50 @@ class Util {
       reverseCurve: Curves.fastOutSlowIn, // 设置退出动画曲线
     );
   }
+  static void showToastCourseNew(String? msg, BuildContext context) {
+    // 检查消息是否为空或null
+    if (msg == null || msg.isEmpty) {
+      return; // 如果为空或null，直接返回，不显示toast消息
+    }
+
+    // 获取Overlay的State
+    OverlayState? overlayState = Overlay.of(context);
+    // 创建OverlayEntry
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        // 设置Toast在屏幕底部，并考虑键盘的高度
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        width: MediaQuery.of(context).size.width,
+        child: Material(
+          color: Colors.transparent,
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                msg,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // 插入OverlayEntry
+    overlayState?.insert(overlayEntry);
+
+    // 延迟一段时间后移除Toast
+    Future.delayed(Duration(seconds: 2), () {
+      overlayEntry.remove();
+    });
+  }
 
   /// 显示 Toast 消息
-  // static void showToast(String? msg) {
-  //   if (TextUtil.isEmpty(msg)) {
-  //     return;
-  //   }
-  //   StyledToast(
-  //     textStyle: TextStyle(fontSize: 16.0, color: Colors.white),
-  //     backgroundColor: Color(0x99000000),
-  //     borderRadius: BorderRadius.circular(5.0),
-  //     textPadding: EdgeInsets.symmetric(horizontal: 17.0, vertical: 10.0),
-  //     toastAnimation: StyledToastAnimation.size,
-  //     reverseAnimation: StyledToastAnimation.size,
-  //     startOffset: Offset(0.0, -1.0),
-  //     reverseEndOffset: Offset(0.0, -1.0),
-  //     duration: Duration(seconds: 4),
-  //     animDuration: Duration(seconds: 1),
-  //     alignment: Alignment.center,
-  //     toastPositions: StyledToastPosition.center,
-  //     curve: Curves.fastOutSlowIn,
-  //     reverseCurve: Curves.fastOutSlowIn,
-  //     dismissOtherOnShow: true,
-  //     locale: const Locale('en', 'US'),
-  //     fullWidth: false,
-  //     isHideKeyboard: false,
-  //     isIgnoring: true,
-  //     child: MaterialApp(
-  //       title: msg!,
-  //       showPerformanceOverlay: true,
-  //       home: LayoutBuilder(
-  //         builder: (BuildContext context, BoxConstraints constraints) {
-  //           return MyHomePage(
-  //             title: appTitle,
-  //             onSetting: onSettingCallback,
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
+
 
   /// 取消当前焦点
   static void cancelFocus(BuildContext context) {
@@ -264,5 +253,6 @@ class Util {
       return '$bytes bytes';
     }
   }
+
 
 }

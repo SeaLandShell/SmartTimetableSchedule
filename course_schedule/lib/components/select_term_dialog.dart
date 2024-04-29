@@ -77,6 +77,7 @@ Future<bool?> showSelectTermDialog(List<String?>? terms, BuildContext context) a
         final List<Course> courses = [];
         if (data is List) {
           data.forEach((v) {
+            // print(v);
             courses.add(new Course.fromJson(v)); // 将响应数据转换为Course对象列表
           });
         }

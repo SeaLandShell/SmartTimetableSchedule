@@ -1,6 +1,8 @@
+import 'package:course_schedule/utils/text_util.dart';
 import 'package:course_schedule/utils/util.dart'; // 导入工具库
 import 'package:flutter/cupertino.dart'; // 导入 Flutter Cupertino 库
 import 'package:flutter/material.dart'; // 导入 Flutter Material 库
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../components/pickerview/picker_view.dart'; // 导入自定义选择器组件
 import '../components/pickerview/picker_view_popup.dart'; // 导入自定义选择器弹出框组件
@@ -146,8 +148,8 @@ class DialogUtil {
         });
   }
 
-  static Future<DialogResult?> showFileRenameDialog(
-      BuildContext context,String tip ,Widget custom_widget, onClickCallBack okBtnClick,
+  static Future<DialogResult?> showCustomWidgetDialog(
+      BuildContext context,String title ,Widget custom_widget, onClickCallBack okBtnClick,
       {onClickCallBack? cancelBtnClick}) {
     return showDialog(
         context: context, // 上下文对象
@@ -158,20 +160,12 @@ class DialogUtil {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))), // 对话框形状
             title: Text(
-              "文件重命名", // 对话框标题
+              "$title", // 对话框标题
               textAlign: TextAlign.center, // 文本居中对齐
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min, // 垂直方向最小尺寸
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(24.0), // 设置边距
-                  child: Text(
-                    tip, // 提示文本内容
-                    style:
-                    TextStyle(fontSize: 16, color: Colors.black54), // 文本样式
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(10.0), // 设置边距
                   child: custom_widget,
@@ -322,6 +316,23 @@ class DialogUtil {
             child: builder(row), // 构建选择器项
           );
         });
+  }
+
+
+  /// 显示 Toast 消息
+  static void showToast(String? msg) {
+    if (TextUtil.isEmpty(msg)) {
+      return;
+    }
+    Fluttertoast.showToast(
+      msg: msg!,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.white,
+      textColor: Colors.black87,
+      fontSize: 16.0,
+    );
   }
 }
 

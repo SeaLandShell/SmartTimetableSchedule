@@ -71,9 +71,18 @@ dependencies:
   google_nav_bar: ^5.0.6
   tbib_file_uploader: ^1.11.0
   file_preview: ^1.2.0
-  photo_view: ^0.15.0
+  photo_view: ^0.14.0
   tbib_downloader: ^1.10.0
   shine_flutter: ^1.0.2
+  fluttertoast: ^8.2.5
+  flutter_quill: ^9.3.3
+  hydrated_bloc: ^9.1.5
+  super_clipboard: ^0.8.9
+  gal: ^2.3.0
+  flutter_bloc: ^8.1.5
+  flutter_quill_extensions: ^9.3.4
+  google_fonts: ^6.2.1
+  group_list_view: ^1.1.1
 #  webview_flutter: ^4.7.0
 
 
@@ -96,6 +105,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  flutter_quill_test: ^9.3.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

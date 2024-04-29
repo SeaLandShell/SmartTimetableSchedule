@@ -108,8 +108,7 @@ class _HomePageState extends State<HomePage> {
                       flex: 1,
                       child: LayoutBuilder(
                         builder: (context, constraints) {
-                          double tableHeight =
-                          max(tableCellWidth * 12, constraints.maxHeight);
+                          double tableHeight = max(tableCellWidth * 12, constraints.maxHeight);
                           return _buildScrollView(tableHeight); // 构建课程表的可滚动视图
                         },
                       ),

@@ -18,6 +18,7 @@ import 'package:course_schedule/utils/text_util.dart'; // 导入文本工具
 import 'package:course_schedule/utils/util.dart'; // 导入通用工具
 import 'package:provider/provider.dart'; // 导入 Provider 状态管理库
 
+import '../../../provider/store.dart';
 import '../../user/login.dart'; // 导入登录页面
 
 class UserCard extends StatelessWidget {
@@ -123,7 +124,9 @@ class UserCard extends StatelessWidget {
     return _buildButton(context, "登出", Colors.red.shade400, () {
       DialogUtil.showConfirmDialog(context, "确定要退出当前账号吗？", () {
         Util.getReadProvider<UserProvider>(context)
-            .updateLoginState(false, "", ""); // 更新用户登录状态
+            .updateLoginState(false, "", "");
+        Util.getReadProvider<Store>(context).updateLoginState();
+        // 更新用户登录状态
         TokenRepository.getInstance().clear(); // 清除令牌
       });
     });

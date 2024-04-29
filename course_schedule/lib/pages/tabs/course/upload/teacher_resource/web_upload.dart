@@ -13,12 +13,12 @@ import 'package:photo_view/photo_view.dart';
 import 'package:tbib_downloader/tbib_downloader.dart';
 import 'package:file_preview/file_preview.dart';
 
-import '../../../../components/card_view.dart';
-import '../../../../components/clipper/bottom_curve_clipper.dart';
-import '../../../../db/database_manager.dart';
-import '../../../../db/domain/user_db.dart';
-import '../../../../utils/shared_preferences_util.dart';
-import '../../../../utils/util.dart';
+import '../../../../../components/card_view.dart';
+import '../../../../../components/clipper/bottom_curve_clipper.dart';
+import '../../../../../db/database_manager.dart';
+import '../../../../../db/domain/user_db.dart';
+import '../../../../../utils/shared_preferences_util.dart';
+import '../../../../../utils/util.dart';
 import 'dart:io';
 
 

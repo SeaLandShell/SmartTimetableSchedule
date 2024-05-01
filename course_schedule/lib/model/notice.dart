@@ -1,21 +1,62 @@
-import 'package:json_annotation/json_annotation.dart';
+// To parse this JSON data, do
+//
+//     final notice = noticeFromJson(jsonString);
 
-part 'notice.g.dart';
+import 'dart:convert';
 
-@JsonSerializable()
+Notice noticeFromJson(String str) => Notice.fromJson(json.decode(str));
+
+String noticeToJson(Notice data) => json.encode(data.toJson());
+
 class Notice {
-  Notice();
+  late String? noticeId;
+  late String? content;
+  late String? author;
+  late String? releaseTime;
+  late int? type;
+  late String? courseId;
 
-  late String noticeId;
-  late String contentever;
-  late String author;
-  late String releaseTime;
-  late num type;
-  late String courseId;
-  late num id;
-  late String gmtCreate;
-  late String gmtModified;
-  
-  factory Notice.fromJson(Map<String,dynamic> json) => _$NoticeFromJson(json);
-  Map<String, dynamic> toJson() => _$NoticeToJson(this);
+  Notice({
+    this.noticeId,
+    this.content,
+    this.author,
+    this.releaseTime,
+    this.type,
+    this.courseId,
+  });
+
+  Notice copyWith({
+    String? noticeId,
+    String? content,
+    String? author,
+    String? releaseTime,
+    int? type,
+    String? courseId,
+  }) =>
+      Notice(
+        noticeId: noticeId ?? this.noticeId,
+        content: content ?? this.content,
+        author: author ?? this.author,
+        releaseTime: releaseTime ?? this.releaseTime,
+        type: type ?? this.type,
+        courseId: courseId ?? this.courseId,
+      );
+
+  factory Notice.fromJson(Map<String, dynamic> json) => Notice(
+    noticeId: json["noticeId"],
+    content: json["content"],
+    author: json["author"],
+    releaseTime: json["releaseTime"],
+    type: json["type"],
+    courseId: json["courseId"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "noticeId": noticeId,
+    "content": content,
+    "author": author,
+    "releaseTime": releaseTime,
+    "type": type,
+    "courseId": courseId,
+  };
 }

@@ -220,6 +220,13 @@ class _CourseActivityPageState extends State<CourseActivityPage> with SingleTick
       ],
     );
   }
+  String _getInitials(String user) {
+    var buffer = StringBuffer();
+    var split = user.split(" ");
+    for (var s in split) buffer.write(s[0]);
+    return buffer.toString().substring(0, split.length);
+  }
+
   Widget _buildExpansionTileCardsAll() {
     final ButtonStyle flatButtonStyle = TextButton.styleFrom(
       shape: const RoundedRectangleBorder(
@@ -285,7 +292,7 @@ class _CourseActivityPageState extends State<CourseActivityPage> with SingleTick
                       heightFactor: 1.8,
                       alignment: Alignment.center,
                       child: GradientText(
-                        "作业",
+                        _getInitials(_data[index].workName!),
                         gradient: SweepGradient(
                           colors: [Colors.blue[900]!, Colors.blueAccent],
                         ),

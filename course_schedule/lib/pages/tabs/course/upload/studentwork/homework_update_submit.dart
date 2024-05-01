@@ -95,7 +95,10 @@ class _HomeworkUpdateSubmitPageState extends State<HomeworkUpdateSubmitPage> {
               onTap: () async {
                 Upload submitUpload = widget.upload;
                 submitUpload.uploadId=widget.upload.uploadId!.substring(0,20);
-                submitUpload.review="3";
+                // 若教师打回的，拿此处提交标识为“已重新提交”，若是未审核状态的(0)，则不变，与正常提交一样。
+                if(widget.upload.review=="2"){
+                  submitUpload.review="3";
+                }
                 String json = jsonEncode(_controller.document.toDelta().toJson());
                 submitUpload.content = json;
                 if((await ApiClientSchdedule.updateUpload(submitUpload))!>0){

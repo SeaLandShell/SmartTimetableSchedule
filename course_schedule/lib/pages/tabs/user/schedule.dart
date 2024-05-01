@@ -1,15 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:course_schedule/model/index.dart';
-import 'package:course_schedule/model/notice.dart';
 import 'package:course_schedule/net/apiClientSchedule.dart';
-import 'package:course_schedule/pages/tabs/course/upload/notification/publish_notice.dart';
-import 'package:course_schedule/utils/dialog_util.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_cards/flutter_custom_cards.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:shine_flutter/shine_flutter.dart';
 
 import '../../../../../components/clipper/bottom_curve_clipper.dart';
@@ -22,19 +17,17 @@ import '../../../model/course.dart';
 import '../../../provider/store.dart';
 import '../../../ui/coursedetail/course_detail.dart';
 import '../../../utils/file_util.dart';
-import '../../../utils/http_util.dart';
 import '../course/course_import_page.dart';
 import '../course/course_page.dart';
 
-class CourseInteractPage extends StatefulWidget {
-  final Schedule schedule;
-  const CourseInteractPage({super.key,required this.schedule});
+class MeCoursePage extends StatefulWidget {
+  const MeCoursePage({super.key});
 
   @override
-  State<CourseInteractPage> createState() => _CourseInteractPageState();
+  State<MeCoursePage> createState() => _MeCoursePageState();
 }
 
-class _CourseInteractPageState extends State<CourseInteractPage> {
+class _MeCoursePageState extends State<MeCoursePage> {
   /// 内容距状态栏的高度
   static const double topMargin = 32;
   static const double TodayCourseCardHeight = 40;
@@ -43,24 +36,21 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
   double progress = 0;
   double bottomNavBarHeight = 0;
   String term="";
-  bool _loading = true; // 是否正在加载数据的标志
-  bool isTeacher = false;
-  bool hasLearn = false;
-  bool hide = false;
-  QuillController _controller = QuillController.basic();
-  final List<Notice> _data = [];
+  bool _loading=true;
+  final List<Course> _data = [];
 
   @override
   void initState() {
     super.initState();
-    isTeacherOrStu();
     getCourseDetail();
+    getTerm();
   }
-  void isTeacherOrStu() async {
-    UserDb? user = await DataBaseManager.queryUserById(await SharedPreferencesUtil.getPreference('userID', 0));
-    if(user?.userType=="01"){
-      setState(() {isTeacher = true;});
-    }
+  void getTerm() async {
+    String ter="";
+    ter=await SharedPreferencesUtil.getPreference("term", "");
+    setState(() {
+      term=ter;
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -68,6 +58,7 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
     screenHeight = MediaQuery.of(context).size.height;
     bottomNavBarHeight = MediaQuery.of(context).padding.bottom;
     return Scaffold(
+      appBar: AppBar(title: Text("我的课程")),
       body: Container(
         color: Values.bgWhite, // 设置背景颜色为白色
         child: Stack(
@@ -102,7 +93,7 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                     children: [
                       Expanded(
                         child: Text(
-                          '通知栏',
+                          '${term}',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           textAlign: TextAlign.left,
                         ),
@@ -113,7 +104,7 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              '共${_data.length}个通知',
+                              '${_data.length}个开通课程',
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               textAlign: TextAlign.right,
                             ),
@@ -126,7 +117,7 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                 Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                  child: SingleChildScrollView(child: _buildExpansionTileCards(),),
+                  child: _buildExpansionTileCards(),
                 ),
               ],
             ),
@@ -140,9 +131,6 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
         borderRadius: BorderRadius.all(Radius.circular(4.0)),
       ),
     );
-    if (_loading) {
-      return Center(child: CircularProgressIndicator()); // 显示加载指示器
-    }
     if (_data.isEmpty || _data.length==0) {
       return Center(
         child: Padding(
@@ -164,7 +152,7 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                   const Padding(
                     padding: const EdgeInsets.only(top: 8), // 设置顶部边距
                     child: Text(
-                      """暂未发布通知，空空如也~""", // 标题文本
+                      """暂未开通任何课程，空空如也~""", // 标题文本
                       style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold), // 文本样式
                     ),
                   ),
@@ -173,16 +161,13 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
             ),
           ),
         ),
-      );
+      ); // 显示加载指示器
     }
-    double height = screenHeight - statusBarHeight - topMargin - TodayCourseCardHeight - bottomNavBarHeight-130;
+    double height = screenHeight - statusBarHeight - topMargin - TodayCourseCardHeight - bottomNavBarHeight-50;
     return Container(
       height: height, // 设置一个固定的高度
       child: ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          if(_data[index].content!=""){
-            _controller.document = Document.fromJson(jsonDecode(_data[index].content!));
-          }
           final GlobalKey<ExpansionTileCardState> cardB = GlobalKey<ExpansionTileCardState>(); // 在这里初始化GlobalKey
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -205,7 +190,7 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                       heightFactor: 1.8,
                       alignment: Alignment.center,
                       child: GradientText(
-                        _getInitials(_data[index].content!),
+                        _getInitials(_data[index].name),
                         gradient: SweepGradient(
                           colors: [Colors.blue[900]!, Colors.blueAccent],
                         ),
@@ -215,47 +200,30 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                   ],
                 ),
               ),
-              title: Text("发布者：${_data[index].author!}"),
-              subtitle: Text("时间：${_data[index].releaseTime!}"),
+              title: Text(_data[index].name),
+              subtitle: Text(_data[index].classRoom),
               children: <Widget>[
                 const Divider(
                   thickness: 1.0,
                   height: 1.0,
-                ),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(24, 8, 24, 0),
-                    child: Text("内容："),
-                  ),
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16.0,
-                      vertical: 0.0,
+                      vertical: 8.0,
                     ),
-                    child: SingleChildScrollView(
-                      child: Expanded(
-                        child: QuillEditor.basic(
-                          configurations: QuillEditorConfigurations(
-                            // minHeight: screenHeight-300,
-                            padding: EdgeInsets.fromLTRB(36, 0, 16, 8),
-                            placeholder: "开始编辑通知内容吧！",
-                            autoFocus: false,
-                            showCursor: false,
-                            controller: _controller,
-                            readOnly: false,
-                            sharedConfigurations: const QuillSharedConfigurations(
-                              locale: Locale('zh','CN'),
-                            ),
-                          ),
-                        ),
-                      ),),
+                    child: Text(
+                    """班级：${_data[index].group}
+课程号：${_data[index].teacher}""",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(fontSize: 16),
+                    ),
                   ),
                 ),
-                if(isTeacher)
                 ButtonBar(
                   alignment: MainAxisAlignment.spaceAround,
                   buttonHeight: 52.0,
@@ -264,38 +232,22 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                     TextButton(
                       style: flatButtonStyle,
                       onPressed: () {
-                        DialogUtil.showConfirmDialog(context, "确认删除这条通知？", () async {
-                          final resp = await HttpUtil.client.delete("/cschedule/notices/${_data[index].noticeId}",);
-                          print(resp.toString());
-                          final data = HttpUtil.getDataFromResponse(resp.toString()); // 解析响应数据
-                          if(data>0){
-                            Util.showToastCourse("删除成功！", context);
-                            _loading=true;
-                            getCourseDetail();
-                          }
-                        });
+                        _showCourseDetailDialog(context, _data[index]);
                       },
                       child: const Column(
                         children: <Widget>[
-                          Icon(Icons.delete_forever_rounded,color: Colors.red,),
+                          Icon(Icons.details_rounded,color: Colors.green,),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.0),
                           ),
-                          Text('删除',style: TextStyle(color: Colors.red),),
+                          Text('详情',style: TextStyle(color: Colors.green),),
                         ],
                       ),
                     ),
                     TextButton(
                       style: flatButtonStyle,
                       onPressed: () async {
-                        Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return PublishNoticePage(schedule: widget.schedule,notice: _data[index]);
-                        })).then((value) => setState(() {
-                          if(value==true){
-                            _loading=true;
-                            getCourseDetail();
-                          }
-                        }));
+                        jumPage(_data[index], context);
                       },
                       child: const Column(
                         children: <Widget>[
@@ -303,7 +255,7 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.0),
                           ),
-                          Text('编辑',style: TextStyle(color: Colors.blueAccent),),
+                          Text('进入',style: TextStyle(color: Colors.blueAccent),),
                         ],
                       ),
                     ),
@@ -319,39 +271,71 @@ class _CourseInteractPageState extends State<CourseInteractPage> {
   }
 
   String _getInitials(String user) {
-    // var buffer = StringBuffer();
-    // var split = user.split(" ");
-    // for (var s in split) buffer.write(s[0]);
-    // return buffer.toString().substring(0, split.length);
-    return user.substring(12,13);
+    var buffer = StringBuffer();
+    var split = user.split(" ");
+    for (var s in split) buffer.write(s[0]);
+    return buffer.toString().substring(0, split.length);
+    // return user.substring(user.length-1,user.length);
+  }
+
+  Future<bool?> _showCourseDetailDialog(BuildContext context, Course course) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(8),
+          content: CourseDetailWidget(
+            course: course,
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> jumPage(Course course,BuildContext context) async {
+    UserDb? user = await DataBaseManager.queryUserById(await SharedPreferencesUtil.getPreference('userID', 0));
+    bool isEnlight = course.courseNum!="";
+    Schedule? schedule;
+    if(isEnlight){
+      schedule = await ApiClientSchdedule.searchCourse(course.courseNum);
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      if(user!.userType=='01'){
+        return isEnlight ? CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,schedule: schedule!,) :
+        CourseImportPage(course: course,isTeacher: true,);
+      }else{
+        return isEnlight ? CoursePage(index: 0,backgroundColor: Values.bgWhite,className: course.name,schedule: schedule!,) :
+        CourseImportPage(course: course,isTeacher: false,);
+      }
+    }));
   }
 
   void getCourseDetail() async {
     try {
-      final resp = await HttpUtil.client.get(
-          "/cschedule/classes/${widget.schedule.courseId}",
-          data: {
-            'courseId': widget.schedule.courseId,
+      FileUtil.readFromJson(Store.COURSE_JSON_FILE_NAME).then((value) {
+        if (value.isEmpty) {
+          _loading=false;
+          return;
+        }
+        final List<dynamic>? list = json.decode(value); // 解析 JSON 字符串为 List
+        if (list != null) {
+          setState(() {
+            list.forEach((v) {
+              if(v["courseNum"]!=""){
+                _data.add(new Course.fromJson(v));
+              }
+            });
+            _loading=false;
           });
-      final data = HttpUtil.getDataFromResponse(resp.toString()); // 解析响应数据
-      // log(data.toString());
-      if (data['notices'] is List) {
-        // 如果数据是列表类型
-        setState(() {
-          _data.clear(); // 清空数据列表
-          for(var i=0;i<data['notices'].length;i++){
-            // print('我是Resource$i:${Resource.fromJson(data['resources'][i]).toJson()}');
-            _data.add(Notice.fromJson(data['notices'][i]));
-          }
-          _data.sort((a, b) => a.releaseTime!.compareTo(b.releaseTime!));
-          _loading = false; // 加载完成，更新_loading状态为false
-        });
-      }
-    } catch (e) {
-      print(e); // 打印错误信息
-      setState(() {
-        _loading = false; // 加载完成，更新_loading状态为false
+        }
+      }).catchError((error) {
+        print(error);
+        Util.showToastCourse("从本地读取课程数据失败", context as BuildContext); // 弹出错误信息
+        _loading=false;
       });
+    }catch (e) {
+      print(e); // 打印错误信息
+      _loading=false;
     }
   }
 }

@@ -83,6 +83,12 @@ dependencies:
   flutter_quill_extensions: ^9.3.4
   google_fonts: ^6.2.1
   group_list_view: ^1.1.1
+  im_flutter_sdk: ^4.2.0
+  folding_cell: ^1.0.2
+  azlistview: ^2.0.0
+  list_tile_more_customizable: ^3.0.0
+  table_calendar: ^3.0.9
+  line_icons: ^2.0.3
 #  webview_flutter: ^4.7.0
 
 

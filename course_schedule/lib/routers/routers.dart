@@ -1,3 +1,4 @@
+import 'package:course_schedule/pages/tabs/home/home_page.dart';
 import 'package:course_schedule/pages/user/forgetPassword.dart';
 import 'package:course_schedule/pages/user/supplement.dart';
 import 'package:course_schedule/ui/login/wecom_login.dart';
@@ -24,7 +25,6 @@ Map routes = {
   "/forgetPassword": (contxt) => const ForgetPasswordPage(),
   "/register": (contxt) => const RegisterPage(),
   "/supplement": (contxt) => const SupplementPage(),
-  "/shop": (contxt, {arguments}) => ShopPage(arguments: arguments),
   "/collegeLogin": (context) => CollegeLoginPage(),
   "/weComLogin": (context) => WeComLoginPage(),
   "/selectCollege": (_) => SelectCollegePage(),

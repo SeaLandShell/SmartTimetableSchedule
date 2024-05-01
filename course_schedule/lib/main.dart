@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -31,10 +32,11 @@ Future<void> main() async {
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
-  runApp(MultiProvider(providers: [
+  initializeDateFormatting().then((_) => runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => Store()),
     ChangeNotifierProvider(create: (_) => UserProvider()),
-  ], child: const MyApp()));
+  ], child: const MyApp())));
+
   // if (Platform.isAndroid) {
   //   // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
   //   SystemUiOverlayStyle systemUiOverlayStyle =

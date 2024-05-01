@@ -1,9 +1,12 @@
 import 'dart:developer';
+import 'package:course_schedule/utils/parse_teacher_util.dart';
 import 'package:course_schedule/utils/parse_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import '../../model/course.dart';
+import '../../db/database_manager.dart';
+import '../../db/domain/user_db.dart';
+import '../../utils/shared_preferences_util.dart';
 
 class InAppWebViewPage extends StatefulWidget {
   final String initialUrl;
@@ -18,6 +21,7 @@ class _InAppWebViewPageState extends State<InAppWebViewPage> {
   InAppWebViewController? _webViewController;
   CookieManager? cookieManager;
   bool _isTimetablePageLoaded = false;
+  bool isTeacher=true;
   String url = "";
   double progress = 0;
   String html="";
@@ -25,8 +29,17 @@ class _InAppWebViewPageState extends State<InAppWebViewPage> {
   @override
   void initState() {
     super.initState();
+    isTeacherOrStu();
     cookieManager = CookieManager.instance();
   }
+  void isTeacherOrStu() async {
+    int userID = await SharedPreferencesUtil.getPreference('userID', 0);
+    UserDb? user = await DataBaseManager.queryUserById(userID);
+    if(user?.userType=="01"){
+      setState(() {isTeacher = true;});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,7 +160,8 @@ class _InAppWebViewPageState extends State<InAppWebViewPage> {
         iframeContent;
       """);
                           // log(iframeHtml);
-                          ParseUtil.instance.importTimetable(iframeHtml,context);
+                          !isTeacher? ParseUtil.instance.importTimetable(iframeHtml,context) :
+                              ParseTeacherUtil.instance.importTimetable(iframeHtml, context);
                         },
                       ): SizedBox.shrink(),
                     ],
@@ -189,5 +203,4 @@ class _InAppWebViewPageState extends State<InAppWebViewPage> {
       ),
     );
   }
-
 }

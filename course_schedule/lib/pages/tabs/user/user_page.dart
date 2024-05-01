@@ -1,17 +1,17 @@
-import 'package:add_calendar_event/add_calendar_event.dart'; // 导入添加日历事件的库
-import 'package:flutter/cupertino.dart'; // 导入 Flutter Cupertino 风格的部件
-import 'package:flutter/material.dart'; // 导入 Flutter Material 部件
-import 'package:course_schedule/components/card_view.dart'; // 导入自定义的卡片部件
+// https://pub.dev/packages/group_list_view/example
 import 'package:course_schedule/components/clipper/bottom_curve_clipper.dart'; // 导入自定义的底部曲线剪裁器
-import 'package:course_schedule/components/item_button.dart'; // 导入自定义的项目按钮部件
 import 'package:course_schedule/data/values.dart'; // 导入常量值
-import 'package:course_schedule/provider/store.dart'; // 导入存储提供者
-import 'package:course_schedule/pages/tabs/plan/today_course.dart'; // 导入今日课程页面
+import 'package:course_schedule/pages/tabs/user/approach.dart';
+import 'package:course_schedule/pages/tabs/user/protocol.dart';
+import 'package:course_schedule/pages/tabs/user/schedule.dart';
 import 'package:course_schedule/pages/tabs/user/user_card.dart'; // 导入用户卡片页面
-import 'package:course_schedule/utils/device_type.dart'; // 导入设备类型工具
-import 'package:course_schedule/utils/dialog_util.dart'; // 导入对话框工具
-import 'package:course_schedule/utils/util.dart'; // 导入通用工具
+import 'package:course_schedule/utils/util.dart';
+import 'package:flutter/material.dart'; // 导入 Flutter Material 部件
 
+import '../../../components/select_term_dialog.dart';
+import '../../../utils/app_colors.dart'; // 导入通用工具
+
+typedef onClickCallBack = void Function ();
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
 
@@ -53,7 +53,7 @@ class _UserPageState extends State<UserPage> {
               // 应用渐变背景色
             ),
           ),
-          Column(
+          SingleChildScrollView(child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
@@ -61,23 +61,113 @@ class _UserPageState extends State<UserPage> {
                     EdgeInsets.fromLTRB(16, statusBarHeight + topMargin, 16, 0),
                 child: UserCard(), // 用户信息卡片
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Text("自定义卡片") // 今日课程
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    child: _buildCard("我的课表","需提前导入课表","",() async {
+                      try {
+                        showSelectTermDialog(
+                            await getTermOptionsFormInternet(), context); // 异步获取学期信息并显示选择学期的对话框
+                      } catch (e) {
+                        Util.showToastCourse("获取学期信息失败", context);
+                      }
+                    }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                    child: _buildCard("我的课程","已开通课程","",(){
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return MeCoursePage();
+                      }));
+                    }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                    child: _buildCard("我的信息","个人中心","",(){
+                      Navigator.pushNamed(context, "/supplement");
+                    }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                    child: _buildCard("用户协议","预览查看","",(){
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return AgreementPage();
+                      }));
+                    }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                    child: _buildCard("使用技巧","快速掌握","",(){
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return ApproachPage();
+                      }));
+                    }),
+                  ),
+                ],
               ),
-              if (DeviceType.isMobile)
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    child: Text("自定义卡片") // 今日课程, // 构建提醒工具
-                ),
+
             ],
-          ),
+          ),),
         ],
       ),
     );
   }
 
-  static const _reminderEventDesc = "课程表自动创建";
+  Widget _buildCard(String title,String subTitle,String tip,onClickCallBack){
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0.0),
+      child: GestureDetector(
+        onTap: onClickCallBack,
+        child: Card(
+          elevation: 8,
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6.0),
+            tileColor: Colors.white,
+            selectedTileColor: Colors.lightBlueAccent.shade100,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            leading: CircleAvatar(
+              child: Text(
+                _getInitials(title),
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              backgroundColor: _getAvatarColor(title),
+            ),
+            title: Text(
+              title,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+            ),
+            subtitle: Text(
+              subTitle,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+            ),
+            trailing:Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(tip),
+                Icon(Icons.arrow_forward_ios,color: Colors.blue,),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getInitials(String user) {
+    // var buffer = StringBuffer();
+    // var split = user.split(" ");
+    // for (var s in split) buffer.write(s[0]);
+    // return buffer.toString().substring(0, split.length);
+    return user.substring(user.length-1,user.length);
+  }
+
+  Color _getAvatarColor(String user) {
+    return AppColors
+        .avatarColors[user.hashCode % AppColors.avatarColors.length];
+  }
 
 }

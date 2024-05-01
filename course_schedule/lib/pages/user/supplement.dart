@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import '../../db/domain/user_db.dart';
 import '../../net/globalVariables.dart';
 import '../../provider/user_provider.dart';
 import '../../utils/dialog_util.dart';
+import '../../utils/shared_preferences_util.dart';
 import '../../utils/util.dart';
 
 class SupplementPage extends StatefulWidget {
@@ -65,7 +67,11 @@ class _SupplementPageState extends State<SupplementPage> {
   }
 
   Future<void> _loadUserData() async {
+    var database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    userDao = database.userDao;
     phoneNumber=await _loadPrefs() ?? '';
+    _user =(await userDao.findUserById(await SharedPreferencesUtil.getPreference("userID", 0)))??UserDb();
+
     // 获取UserProvider实例
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     // 设置控制器的初始值
@@ -74,6 +80,10 @@ class _SupplementPageState extends State<SupplementPage> {
     // _selectedDepartmentIndex = _departments.indexOf(_user.deptId as String); // 获取院系索引值
     _selectedDepartmentIndex = _user.deptId??0;
     _selectedDepartment = _departments[_selectedDepartmentIndex]; // 根据索引值获取院系名称
+    _nickNameController.text=_user.nickName??"";
+    _stuNumController.text=_user.stuTuNumber??"";
+    _emailController.text=_user.email??"";
+    _birthdayController.text=_user.birthday??"";
     setState(() {
       _avatar= userProvider.userIcon??'';
     });
@@ -152,19 +162,19 @@ class _SupplementPageState extends State<SupplementPage> {
                 decoration: const InputDecoration(labelText: '昵称'),
                 validator: RequiredValidator(errorText: '请输入昵称'),
               ),
-              const SizedBox(height: 10.0),
-              DropdownButtonFormField<String>(
-                value: _selectedDepartment,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedDepartment = newValue!;
-                    _selectedDepartmentIndex = _departments.indexOf(newValue); // 更新选择的院系索引值
-                  });
-                },
-                items: _departments.map((dept) => DropdownMenuItem(value: dept, child: Text(dept))).toList(),
-                decoration: const InputDecoration(labelText: '院系'),
-                validator: RequiredValidator(errorText: '请选择院系'),
-              ),
+              // const SizedBox(height: 10.0),
+              // DropdownButtonFormField<String>(
+              //   value: _selectedDepartment,
+              //   onChanged: (newValue) {
+              //     setState(() {
+              //       _selectedDepartment = newValue!;
+              //       _selectedDepartmentIndex = _departments.indexOf(newValue); // 更新选择的院系索引值
+              //     });
+              //   },
+              //   items: _departments.map((dept) => DropdownMenuItem(value: dept, child: Text(dept))).toList(),
+              //   decoration: const InputDecoration(labelText: '院系'),
+              //   validator: RequiredValidator(errorText: '请选择院系'),
+              // ),
               const SizedBox(height: 10.0),
               TextFormField(
                 controller: _stuNumController,
@@ -221,12 +231,16 @@ class _SupplementPageState extends State<SupplementPage> {
               ),
               const SizedBox(height: 20.0),
               ElevatedButton(
+                style: ButtonStyle(
+                  // backgroundColor: MaterialStateProperty.all<Color>(_countdown == 0 ? Colors.lightBlueAccent : Colors.grey), // 根据倒计时状态设置按钮颜色
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlueAccent),
+                ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _saveUserData(context); // 表单验证通过后保存用户数据
                   }
                 },
-                child: const Text('保存'),
+                child: const Text('保存',style: TextStyle(color: Colors.white),),
               ),
             ],
           ),
@@ -245,7 +259,7 @@ class _SupplementPageState extends State<SupplementPage> {
     _user.email = _emailController.text;
     _user.birthday = _birthdayController.text;
     _user.sex = _selectedGender;
-    _user.deptId = _departments.indexOf(_selectedDepartment); // 更新存储的院系为对应的名称
+    _user.deptId = _departments.indexOf(_selectedDepartment)??0; // 更新存储的院系为对应的名称
     _user.avatar = _avatar;
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     userProvider.updateLoginState(
@@ -267,10 +281,16 @@ class _SupplementPageState extends State<SupplementPage> {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       final dynamic data = responseData['data'];
       // 插入更新好的用户数据
-      await userDao.insertUser(UserDb.fromJson(data));
+      UserDb? uuu = await userDao.findUserById(await SharedPreferencesUtil.getPreference('userID', 0));
+      if(uuu!=null){
+        await userDao.updateUser(UserDb.fromJson(data));
+      }else{
+        await userDao.insertUser(UserDb.fromJson(data));
+      }
       print('先依据provider显示信息，并更新信息和provider，更新远程数据库并存储于本地：${(await userDao.findUserByPhoneNumber(phoneNumber))?.toJson()}');
       Util.showToastCourse("用户数据保存成功",context);
-      Navigator.pushNamed(context, '/tabs'); // 导航到指定的页面
+      uuu==null ? Navigator.pushNamed(context, '/tabs') :
+          Navigator.pop(context);
     }
   }
   void _showSnackBar(BuildContext context, String message) {

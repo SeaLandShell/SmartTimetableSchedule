@@ -71,6 +71,7 @@ class Timetable extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           contentPadding: const EdgeInsets.all(8),
           content: CourseDetailWidget(
             course: course,

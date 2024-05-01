@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorAliceblue">#FFFFFF</color>
+    <color name="colorLightcyan">#CCFFFF</color>
+    <color name="warm_gray">#666666</color>
+    <color name="normal_gray">#333333</color>
+    <color name="colorAccent">#33CCFF</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlue">#33CCFF</color>
+    <color name="colorGrey">#666666</color>
+    <!--主题颜色-->
+    <color name="main_theme_color">#00bbcf</color>
+    <!--背景颜色-->
+    <color name="bg_theme">#f5f5f5</color>
+<!--    字体颜色-->
+    <color name="text_color_small">#999999</color>
+
+    <color name="app_white_slight">#FBFBFB</color>
+    <color name="app_gold">#FF7A59</color>
+    <color name="app_course_textcolor_blue">#13B0F1</color>
+    <color name="app_red">#d81e06</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGray">#D3D3D3</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1565C0</color>
+    <color name="text_view_color">#0C0B0B</color>
+    <color name="background_color_white">#F0F0F0</color>
+</resources>

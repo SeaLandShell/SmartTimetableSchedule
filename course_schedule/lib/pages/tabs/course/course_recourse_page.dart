@@ -413,6 +413,38 @@ class _CourseRecoursePageState extends State<CourseRecoursePage> {
     if (_loading) {
       return Center(child: CircularProgressIndicator()); // 显示加载指示器
     }
+    if (_data.isEmpty || _data.length==0) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 16), // 设置右边距
+          child: Material(
+            color: Colors.transparent, // 背景颜色透明
+            child: Container(
+              constraints: BoxConstraints(minHeight: 64, minWidth: 64), // 设置容器最小宽高
+              padding: const EdgeInsets.all(3), // 设置内边距
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center, // 主轴居中对齐
+                children: [
+                  IconTheme.merge(
+                    data: IconThemeData(size: 24), // 图标尺寸
+                    child: Icon(Icons.change_circle_rounded,
+                      size: 100,
+                      color: Colors.blueGrey.shade500,), // 图标
+                  ),
+                  const Padding(
+                    padding: const EdgeInsets.only(top: 8), // 设置顶部边距
+                    child: Text(
+                      """暂未上传资源，空空如也~""", // 标题文本
+                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold), // 文本样式
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     double height = screenHeight - statusBarHeight - topMargin - TodayCourseCardHeight - bottomNavBarHeight-280;
     return Container(
       height: height, // 设置一个固定的高度

@@ -19,7 +19,7 @@ public class Notice extends BaseEntity { // 定义Notice类，继承BaseEntity�
 
     private String noticeId; // 消息ID，字符串类型
 
-    @Length(min=1, max=100, message = "消息内容长度在1-100范围内")
+//    @Length(min=1, max=100, message = "消息内容长度在1-100范围内")
     private String content; // 消息内容，字符串类型，长度在1-100范围内
 
     @NotNull

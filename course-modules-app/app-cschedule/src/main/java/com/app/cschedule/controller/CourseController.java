@@ -47,6 +47,15 @@ public class CourseController extends BaseController { // 定义课程控制器�
         return handleResult(new CourseDTO().convertFor(course)); // 处理并返回转换后的课程DTO对象
     }
 
+    @ApiOperation(value = "修改课程") // 定义Swagger操作描述为"创建课程"
+    @LogAnnotation(operation = "修改课程") // 添加日志注解，操作为"创建课程"
+    @PostMapping("/update") // 定义POST请求映射路径为"/courses"
+    public Result updateCourse(String courseNum,String synopsis) { // 定义创建课程方法，参数为请求体Course对象
+        Course course=courseService.searchCourse(courseNum);
+        course.setSynopsis(synopsis);
+        return handleResult(courseService.updateByExId(course)); // 处理并返回转换后的课程DTO对象
+    }
+
     @ApiOperation(value = "开启/关闭评分") // 定义Swagger操作描述为"开启/关闭评分"
     @LogAnnotation(operation = "开启/关闭评分") // 添加日志注解，操作为"开启/关闭评分"
     @PutMapping("/courses/appraise/{id}") // 定义PUT请求映射路径为"/courses/appraise/{id}"

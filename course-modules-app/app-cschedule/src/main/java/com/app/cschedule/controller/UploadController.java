@@ -45,7 +45,7 @@ public class UploadController extends BaseController {
     @PostMapping("/submit")
     public Result addUpload(@RequestBody Upload upload) {
 //        mysql
-        Upload uploaded = uploadService.selectUploadByCourseIdUploadName(upload.getCourseId(), upload.getWorkName(), upload.getUserId());
+        Upload uploaded = uploadService.selectUploadByCourseIdUploadName(upload.getCourseId(), upload.getWorkId(), upload.getUserId());
         if(uploaded!=null){
             return handleResult(0).setMessage("当前作业已提交，请在提交记录中提交修改！").setCode(1);
         }

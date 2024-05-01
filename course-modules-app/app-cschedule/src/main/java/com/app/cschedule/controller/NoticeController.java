@@ -21,6 +21,7 @@ public class NoticeController extends BaseController {
     @LogAnnotation(operation = "添加通知")
     @PostMapping
     public Result sendNotice(@RequestBody Notice noticeForm) {
+        System.out.println(noticeForm.toString());
         Notice notice = noticeService.addNotice(noticeForm);
         return handleResult(notice);
     }
@@ -30,5 +31,12 @@ public class NoticeController extends BaseController {
     @DeleteMapping("/{id}")
     public Result deleteNotice(@PathVariable String id) {
         return handleResult(noticeService.deleteByExId(id));
+    }
+
+    @ApiOperation(value = "修改通知")
+    @LogAnnotation(operation = "修改通知")
+    @PostMapping("/update")
+    public Result updateNotice(@RequestBody Notice notice) {
+        return handleResult(noticeService.updateByExId(notice));
     }
 }

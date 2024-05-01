@@ -12,6 +12,7 @@ public interface UploadService extends IService<Upload> {
 
     int addUpload(Upload upload);
 
+
     Upload selectUploadByCourseIdUploadName(@Param("courseId") String courseId,@Param("workId") String workId,@Param("userId") Long userId);
 
     Upload selectUpload(Upload upload);

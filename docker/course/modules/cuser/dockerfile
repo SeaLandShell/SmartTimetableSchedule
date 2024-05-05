@@ -1,0 +1,15 @@
+# 基础镜像
+FROM  openjdk:8-jre
+# author
+MAINTAINER course
+
+# 挂载目录
+VOLUME /home/course
+# 创建目录
+RUN mkdir -p /home/course
+# 指定路径
+WORKDIR /home/course
+# 复制jar文件到路径
+COPY ./jar/course-modules-ctimetable.jar /home/course/course-modules-ctimetable.jar
+# 启动文件服务
+ENTRYPOINT ["java","-jar","course-modules-ctimetable.jar"]

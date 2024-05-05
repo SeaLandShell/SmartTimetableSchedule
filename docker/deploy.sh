@@ -9,29 +9,36 @@ usage() {
 # 开启所需端口
 port(){
 	firewall-cmd --add-port=80/tcp --permanent
-	firewall-cmd --add-port=8080/tcp --permanent
+	firewall-cmd --add-port=8081/tcp --permanent
+	firewall-cmd --add-port=8718/tcp --permanent
 	firewall-cmd --add-port=8848/tcp --permanent
 	firewall-cmd --add-port=9848/tcp --permanent
 	firewall-cmd --add-port=9849/tcp --permanent
 	firewall-cmd --add-port=6379/tcp --permanent
 	firewall-cmd --add-port=3306/tcp --permanent
+	firewall-cmd --add-port=27017/tcp --permanent
 	firewall-cmd --add-port=9100/tcp --permanent
 	firewall-cmd --add-port=9200/tcp --permanent
 	firewall-cmd --add-port=9201/tcp --permanent
 	firewall-cmd --add-port=9202/tcp --permanent
 	firewall-cmd --add-port=9203/tcp --permanent
 	firewall-cmd --add-port=9300/tcp --permanent
+	firewall-cmd --add-port=9301/tcp --permanent
+	firewall-cmd --add-port=9302/tcp --permanent
+	firewall-cmd --add-port=9401/tcp --permanent
+	firewall-cmd --add-port=9402/tcp --permanent
+	firewall-cmd --add-port=9404/tcp --permanent
 	service firewalld restart
 }
 
 # 启动基础环境（必须）
 base(){
-	docker-compose up -d course-mysql course-redis course-nacos
+	docker-compose up -d course-mysql course-redis course-nacos course-mongodb
 }
 
 # 启动程序模块（必须）
 modules(){
-	docker-compose up -d course-nginx course-gateway course-auth course-modules-system
+	docker-compose up -d  course-nginx course-gateway course-auth course-modules-system course-modules-cuser course-modules-ctimetable course-modules-gen course-modules-job course-modules-file
 }
 
 # 关闭所有环境/模块

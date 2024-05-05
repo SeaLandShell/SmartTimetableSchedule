@@ -37,7 +37,7 @@ services:
         ]
     environment:
       MYSQL_DATABASE: 'ry-cloud'
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: @Brother0303
   course-redis:
     container_name: course-redis
     image: redis
@@ -46,9 +46,21 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./redis/conf/redis.conf:/home/course/redis/redis.conf
+      - ./redis/conf/mongo.conf:/home/course/redis/mongo.conf
       - ./redis/data:/data
-    command: redis-server /home/course/redis/redis.conf
+    command: redis-server /home/course/redis/mongo.conf
+  course-mongodb:
+    container_name: course-mongodb
+    image: mongo
+    build:
+      context: ./mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb/data:/data/db
+      - ./mongodb/config:/etc/mongo
+    command: mongod --config /etc/mongo/mongod.conf
+
   course-nginx:
     container_name: course-nginx
     image: nginx
@@ -57,7 +69,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/html/dist:/home/course/projects/course-ui
+      - ./nginx/html/dist:/home/course/projects/system-ui
       - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/logs:/var/log/nginx
       - ./nginx/conf.d:/etc/nginx/conf.d
@@ -94,6 +106,32 @@ services:
       dockerfile: dockerfile
     ports:
       - "9201:9201"
+    depends_on:
+      - course-redis
+      - course-mysql
+    links:
+      - course-redis
+      - course-mysql
+  course-modules-cuser:
+    container_name: course-modules-cuser
+    build:
+      context: ./course/modules/cuser
+      dockerfile: dockerfile
+    ports:
+      - "9301:9301"
+    depends_on:
+      - course-redis
+      - course-mysql
+    links:
+      - course-redis
+      - course-mysql
+  course-modules-ctimetable:
+    container_name: course-modules-ctimetable
+    build:
+      context: ./course/modules/ctimetable
+      dockerfile: dockerfile
+    ports:
+      - "9302:9302"
     depends_on:
       - course-redis
       - course-mysql
@@ -138,3 +176,46 @@ services:
       dockerfile: dockerfile
     ports:
       - "9100:9100"
+
+
+  course-modules-app-acuser:
+    container_name: course-modules-app-acuser
+    build:
+      context: ./course/moduels_app/acuser
+      dockerfile: dockerfile
+    ports:
+      - "9401:9401"
+    depends_on:
+      - course-redis
+      - course-mysql
+    links:
+      - course-redis
+      - course-mysql
+  course-modules-app-actimetable:
+    container_name: course-modules-app-ctimetable
+    build:
+      context: ./course/moduels_app/actimetable
+      dockerfile: dockerfile
+    ports:
+      - "9402:9402"
+    depends_on:
+      - course-redis
+      - course-mysql
+    links:
+      - course-redis
+      - course-mysql
+  course-modules-app-acschedule:
+    container_name: course-modules-app-acschedule
+    build:
+      context: ./course/moduels_app/acschedule
+      dockerfile: dockerfile
+    ports:
+      - "9404:9404"
+    depends_on:
+      - course-redis
+      - course-mysql
+      - course-mongodb
+    links:
+      - course-redis
+      - course-mysql
+      - course-mongodb

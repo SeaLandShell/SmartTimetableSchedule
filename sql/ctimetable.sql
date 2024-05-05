@@ -2,7 +2,7 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for calendar_table
+-- Table structure for calendar_table  课表
 -- ----------------------------
 DROP TABLE IF EXISTS `calendar_table`;
 CREATE TABLE `calendar_table`

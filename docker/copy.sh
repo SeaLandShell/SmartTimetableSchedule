@@ -9,12 +9,16 @@ usage() {
 
 # copy sql
 echo "begin copy sql "
-cp ../sql/ry_20230706.sql ./mysql/db
-cp ../sql/ry_config_20220929.sql ./mysql/db
+cp ../sql/course_cloud.sql ./mysql/db
+cp ../sql/ctimetable.sql ./mysql/db
+cp ../sql/quartz.sql ./mysql/db
+cp ../sql/ry_20231130.sql ./mysql/db
+cp ../sql/ry_config_20231204.sql ./mysql/db
+cp ../sql/ry_seata_20210128.sql ./mysql/db
 
 # copy html
 echo "begin copy html "
-cp -r ../course-ui/dist/** ./nginx/html/dist
+cp -r ../system-ui/dist/** ./nginx/html/dist
 
 
 # copy jar
@@ -38,4 +42,19 @@ cp ../course-modules/course-job/target/course-modules-job.jar ./course/modules/j
 
 echo "begin copy course-modules-gen "
 cp ../course-modules/course-gen/target/course-modules-gen.jar ./course/modules/gen/jar
+
+echo "begin copy course-modules-cuser "
+cp ../course-modules/course-cuser/target/course-modules-cuser.jar ./course/modules/cuser/jar
+
+echo "begin copy course-modules-ctimetable "
+cp ../course-modules/course-ctimetable/target/course-modules-ctimetable.jar ./course/modules/ctimetable/jar
+
+echo "begin copy course-modules-app-cuser "
+cp ../course-modules-app/app-cuser/target/app-cuser.jar ./course/modules_app/acuser/jar
+
+echo "begin copy course-modules-app-ctimetable "
+cp ../course-modules-app/app-ctimetable/target/app-ctimetable.jar ./course/modules_app/actimetable/jar
+
+echo "begin copy course-modules-app-cschedule "
+cp ../course-modules-app/app-cschedule/target/app-cschedule.jar ./course/modules_app/acschedule/jar
 

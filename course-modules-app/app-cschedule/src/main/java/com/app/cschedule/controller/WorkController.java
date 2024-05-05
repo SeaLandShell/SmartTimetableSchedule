@@ -4,24 +4,14 @@ import com.app.cschedule.common.annotation.LogAnnotation;
 import com.app.cschedule.common.constant.LogType;
 import com.app.cschedule.common.result.Result;
 import com.app.cschedule.common.support.BaseController;
-import com.app.cschedule.entity.Member;
 import com.app.cschedule.entity.Work;
-import com.app.cschedule.mapper.MemberMapper;
-import com.app.cschedule.mapper.ResourceMapper;
-import com.app.cschedule.model.CourseDTO;
-import com.app.cschedule.model.MemberDTOO;
-import com.app.cschedule.service.CourseService;
-import com.app.cschedule.service.ResourceService;
 import com.app.cschedule.service.WorkService;
-import com.app.ctimetable.service.CalendarService;
-import com.course.common.redis.service.RedisService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Api(tags = "教师作业管理")

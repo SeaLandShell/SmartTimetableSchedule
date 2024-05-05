@@ -29,7 +29,7 @@
 ~~~
 com.course     
 ├── course-ui              // 前端框架 [80]
-├── course-gateway         // 网关模块 [8080]
+├── course-gateway         // 网关模块 [8081]
 ├── course-auth            // 认证中心 [9200]
 ├── course-api             // 接口模块
 │       └── course-api-system                          // 系统接口

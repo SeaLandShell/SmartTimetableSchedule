@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.app.cschedule</groupId>
     <artifactId>app-cschedule</artifactId>
 
     <properties>
@@ -58,17 +57,17 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
-        <!-- course Common DataSource -->
-        <dependency>
-            <groupId>com.course</groupId>
-            <artifactId>course-common-datasource</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
+
+        <!-- course Common DataSource -->
+        <dependency>
+            <groupId>com.course</groupId>
+            <artifactId>course-common-datasource</artifactId>
+        </dependency>
 
         <!-- course Common Log -->
         <dependency>
@@ -96,12 +95,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.app.ctimetable</groupId>
-            <artifactId>app-ctimetable</artifactId>
-            <version>3.6.3</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -116,9 +109,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>13.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -132,7 +130,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>8</source><target>8</target></configuration></plugin>
+            </plugin>
         </plugins>
     </build>
 

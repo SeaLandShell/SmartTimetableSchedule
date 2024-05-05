@@ -47,7 +47,7 @@ public class sendMessageController extends BaseController {
 ////                return "账号错误";
 //        }
         // 生成4位随机数字的验证码
-        /*
+
         String netVerifycode= String.format("%04d", new Random().nextInt(9999));
         Map<String, String> map = new HashMap<>();
         map.put("code", netVerifycode);
@@ -60,8 +60,8 @@ public class sendMessageController extends BaseController {
         }else {
             return error("验证码发送失败");
         }
-        */
-        return success("5251");
+
+//        return success("5251");
     }
 
     /**

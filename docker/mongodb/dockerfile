@@ -1,0 +1,13 @@
+# 基础镜像，使用MongoDB作为基础镜像
+FROM mongo
+# 作者信息
+MAINTAINER course
+
+
+VOLUME /home/course/mongodb
+# 创建目录，如果目录不存在则创建
+RUN mkdir -p /home/course/mongodb
+# 指定工作目录，设置工作目录为/home/course/mongodb
+WORKDIR /home/course/mongodb
+# 复制MongoDB配置文件到容器中的/home/course/mongodb路径
+COPY ./conf/mongod.conf /home/course/mongodb/mongod.conf

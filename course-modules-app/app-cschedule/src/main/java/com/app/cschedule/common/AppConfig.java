@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
-@ComponentScan(basePackages = {"com.app.cschedule", "com.app.ctimetable",})
+@ComponentScan(basePackages = {"com.app.cschedule"})
 public class AppConfig {
     @Bean
     public MongoClient mongoClient() {

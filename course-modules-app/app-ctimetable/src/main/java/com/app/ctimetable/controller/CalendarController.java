@@ -78,7 +78,7 @@ public class CalendarController {
             responseWrap.setStatus(0).setMsg("分享成功!").setData(
                     new ShareModel(
                             key,
-                            "http://" + address + ":8080" + "/ctimetable/calendar/getSharedCalendar?key=" + key,
+                            "http://" + address + ":8081" + "/ctimetable/calendar/getSharedCalendar?key=" + key,
                             "http://" + address + "/quick-access/" + key));
         }
         return responseWrap;

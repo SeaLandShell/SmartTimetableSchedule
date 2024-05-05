@@ -7,28 +7,25 @@ import com.app.cschedule.common.result.Result;
 import com.app.cschedule.common.result.ResultCode;
 import com.app.cschedule.common.support.BaseController;
 import com.app.cschedule.entity.Course;
+import com.app.cschedule.entity.CourseCell;
 import com.app.cschedule.entity.Member;
 import com.app.cschedule.entity.Resource;
 import com.app.cschedule.mapper.ResourceMapper;
 import com.app.cschedule.model.MemberDTO;
+import com.app.cschedule.service.CalendarService;
 import com.app.cschedule.service.CourseService;
 import com.app.cschedule.service.MemberService;
 import com.app.cschedule.service.ResourceService;
-import com.app.ctimetable.service.CalendarService;
 import com.course.common.core.domain.R;
 import com.course.common.redis.service.RedisService;
-import com.course.common.security.annotation.InnerAuth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Api(tags = "班级成员管理")
@@ -84,9 +81,9 @@ public class MemberController extends BaseController {
         }
         System.out.println("查找到的calenddar："+calendar);
         Gson gson = new Gson();
-        com.app.ctimetable.entity.Course[] coursesArray = gson.fromJson(calendar, com.app.ctimetable.entity.Course[].class);
-        List<com.app.ctimetable.entity.Course> coursesList = Arrays.asList(coursesArray);
-        for (com.app.ctimetable.entity.Course courseItem : coursesList) {
+        CourseCell[] coursesArray = gson.fromJson(calendar,CourseCell[].class);
+        List<CourseCell> coursesList = Arrays.asList(coursesArray);
+        for (CourseCell courseItem : coursesList) {
             if (courseItem.getName().equals(course.getCourseName())) {
                 courseItem.setCourseNum("");
             }

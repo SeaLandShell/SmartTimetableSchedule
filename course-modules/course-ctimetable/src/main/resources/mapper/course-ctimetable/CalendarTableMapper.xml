@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.course.ctimetable.mapper.CalendarTableMapper">
+    
+    <resultMap type="CalendarTable" id="CalendarTableResult">
+        <result property="uuid"    column="uuid"    />
+        <result property="userid"    column="userid"    />
+        <result property="term"    column="term"    />
+        <result property="calendar"    column="calendar"    />
+    </resultMap>
+
+    <sql id="selectCalendarTableVo">
+        select uuid, userid, term, calendar from calendar_table
+    </sql>
+
+    <select id="selectCalendarTableList" parameterType="CalendarTable" resultMap="CalendarTableResult">
+        <include refid="selectCalendarTableVo"/>
+        <where>  
+            <if test="userid != null "> and userid = #{userid}</if>
+            <if test="term != null  and term != ''"> and term = #{term}</if>
+            <if test="calendar != null  and calendar != ''"> and calendar = #{calendar}</if>
+        </where>
+    </select>
+    
+    <select id="selectCalendarTableByUuid" parameterType="Long" resultMap="CalendarTableResult">
+        <include refid="selectCalendarTableVo"/>
+        where uuid = #{uuid}
+    </select>
+        
+    <insert id="insertCalendarTable" parameterType="CalendarTable" useGeneratedKeys="true" keyProperty="uuid">
+        insert into calendar_table
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">userid,</if>
+            <if test="term != null and term != ''">term,</if>
+            <if test="calendar != null and calendar != ''">calendar,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userid != null">#{userid},</if>
+            <if test="term != null and term != ''">#{term},</if>
+            <if test="calendar != null and calendar != ''">#{calendar},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCalendarTable" parameterType="CalendarTable">
+        update calendar_table
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userid != null">userid = #{userid},</if>
+            <if test="term != null and term != ''">term = #{term},</if>
+            <if test="calendar != null and calendar != ''">calendar = #{calendar},</if>
+        </trim>
+        where uuid = #{uuid}
+    </update>
+
+    <delete id="deleteCalendarTableByUuid" parameterType="Long">
+        delete from calendar_table where uuid = #{uuid}
+    </delete>
+
+    <delete id="deleteCalendarTableByUuids" parameterType="String">
+        delete from calendar_table where uuid in 
+        <foreach item="uuid" collection="array" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </delete>
+</mapper>

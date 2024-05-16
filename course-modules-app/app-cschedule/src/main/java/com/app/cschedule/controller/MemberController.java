@@ -79,7 +79,7 @@ public class MemberController extends BaseController {
         if(calendar==null){
             return handleResult(member).setMessage("该成员本学期本课程未导入课表，并不在课程内！").setCode(1);
         }
-        System.out.println("查找到的calenddar："+calendar);
+//        System.out.println("查找到的calenddar："+calendar);
         Gson gson = new Gson();
         CourseCell[] coursesArray = gson.fromJson(calendar,CourseCell[].class);
         List<CourseCell> coursesList = Arrays.asList(coursesArray);

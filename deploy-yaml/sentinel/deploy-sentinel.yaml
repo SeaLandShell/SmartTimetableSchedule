@@ -1,0 +1,134 @@
+apiVersion: v1
+data:
+  api-port: "8719"
+  java-option: "-Dfile.encoding=UTF-8 -XX:+UseParallelGC -XX:+PrintGCDetails -Xloggc:/var/log/devops-example.gc.log -XX:+HeapDumpOnOutOfMemoryError -XX:+DisableExplicitGC"
+  server-port: "8718"
+  xmn: "32m"
+  xms: "64m"
+  xmx: "64m"
+kind: ConfigMap
+metadata:
+  name: course-sentinel-cm
+  namespace: course-cloud
+
+---
+
+apiVersion: v1
+data:
+  sentinel-password: c2VudGluZWw=
+  sentinel-username: c2VudGluZWw=
+kind: Secret
+metadata:
+  name: course-sentinel-password-secret
+  namespace: course-cloud
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: course-sentinel-deploy
+  name: course-sentinel-deploy
+  namespace: course-cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: course-sentinel-deploy
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: course-sentinel-deploy
+    spec:
+      containers:
+        - image: registry.cn-shengzhen.aliyuncs.com/xiaohh-docker/sentinel:1.8.6
+          name: sentinel
+          # 存活探针
+          livenessProbe:
+            # 使用http的get请求判断pod是否存活，请求8719端口的/clusterNode判断pod是否存活
+            httpGet:
+              path: /clusterNode
+              port: 8718
+              scheme: HTTP
+            # 在pod初始化完毕20秒后再开始进行存活探针
+            initialDelaySeconds: 20
+            # 之后每隔10秒检查一下应用是否存活
+            periodSeconds: 10
+          ports:
+            - containerPort: 8718
+              name: dashboard
+              protocol: TCP
+            - containerPort: 8719
+              name: api
+              protocol: TCP
+          env:
+            # 引用configmap当中各类配置
+            - name: XMX
+              valueFrom:
+                configMapKeyRef:
+                  key: xmx
+                  name: course-sentinel-cm
+            - name: XMS
+              valueFrom:
+                configMapKeyRef:
+                  key: xms
+                  name: course-sentinel-cm
+            - name: XMN
+              valueFrom:
+                configMapKeyRef:
+                  key: xmn
+                  name: course-sentinel-cm
+            - name: API_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: api-port
+                  name: course-sentinel-cm
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: server-port
+                  name: course-sentinel-cm
+            - name: JAVA_OPTION
+              valueFrom:
+                configMapKeyRef:
+                  key: java-option
+                  name: course-sentinel-cm
+            # 引用secret里面的用户名和密码
+            - name: SENTINEL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: sentinel-username
+                  name: course-sentinel-password-secret
+            - name: SENTINEL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: sentinel-password
+                  name: course-sentinel-password-secret
+          resources: { }
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: course-sentinel-deploy
+  name: course-sentinel-svc
+  namespace: course-cloud
+spec:
+  ports:
+    - name: dashboard
+      port: 8718
+      protocol: TCP
+      targetPort: 8718
+      # nodePort: 30718
+    - name: api
+      port: 8719
+      protocol: TCP
+      targetPort: 8719
+      # nodePort: 30719
+  selector:
+    app: course-sentinel-deploy
+  type: ClusterIP

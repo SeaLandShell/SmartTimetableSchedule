@@ -1,0 +1,31 @@
+# 定义一个Kubernetes Ingress资源，用于配置外部访问内部服务的规则
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  # Ingress资源的名称和所属命名空间
+  name: course-sentinel-ingress
+  namespace: course-cloud
+spec:
+  # 指定Ingress控制器的类
+  ingressClassName: nginx
+  # 定义访问规则
+  rules:
+    - host: sentinel.course.city
+      # 配置HTTP访问路径
+      http:
+        paths:
+          - backend:
+              # 指向的服务及其端口
+              service:
+                name: course-sentinel-svc
+                port:
+                  number: 8718
+            # 访问路径及类型
+            path: /
+            pathType: Prefix
+  # 配置TLS，用于HTTPS访问
+  tls:
+    - hosts:
+        - sentinel.course.city
+      # 指定用于TLS的Secret
+      secretName: course-tls-secret

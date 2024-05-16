@@ -1,0 +1,18 @@
+# 此文件为 Kubernetes ConfigMap 的配置定义，用于定义应用运行时的配置信息。
+# apiVersion 指定了使用的 API 版本，对于 ConfigMap 来说，当前版本为 v1。
+apiVersion: v1
+
+# data 部分定义了 ConfigMap 中包含的配置数据。
+data:
+  # spring-profiles-active 定义了应用激活的 Spring 配置文件环境（例如：生产环境）。
+  spring-profiles-active: "prod"
+
+# kind 指明了此配置对象的类型，对于配置文件来说，类型为 ConfigMap。
+kind: ConfigMap
+
+# metadata 部分包含了此 ConfigMap 的元数据。
+metadata:
+  # name 指定了 ConfigMap 的名称。
+  name: spring-profile-cm
+  # namespace 指定了 ConfigMap 所属的命名空间。
+  namespace: course-cloud

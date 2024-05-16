@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: course-nacos-logs-pv
+spec:
+  capacity:
+    # 申请的容量，生产环境注意修改
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    # nfs服务器地址和目录，注意修改为自己的
+    server: 121.43.152.245
+    path: /data/nfs/course-cloud/nacos/logs
+  # 存储类类型，我们使用nfs
+  storageClassName: "nfs"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: course-nacos-logs-pvc
+  namespace: course-cloud
+spec:
+  accessModes:
+    - ReadWriteMany
+  # 存储类类型，我们使用nfs
+  storageClassName: "nfs"
+  resources:
+    requests:
+      # 申请的容量，生产环境注意修改
+      storage: 1Gi
+  volumeName: course-nacos-logs-pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: course-nacos-data-pv
+spec:
+  capacity:
+    # 申请的容量，生产环境注意修改
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    # nfs服务器地址和目录，注意修改为自己的
+    server: 121.43.152.245
+    path: /data/nfs/course-cloud/nacos/data
+  # 存储类类型，我们使用nfs
+  storageClassName: "nfs"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: course-nacos-data-pvc
+  namespace: course-cloud
+spec:
+  accessModes:
+    - ReadWriteMany
+  # 存储类类型，我们使用nfs
+  storageClassName: "nfs"
+  resources:
+    requests:
+      # 申请的容量，生产环境注意修改
+      storage: 1Gi
+  volumeName: course-nacos-data-pv

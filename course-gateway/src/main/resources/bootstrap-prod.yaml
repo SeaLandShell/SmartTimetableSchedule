@@ -1,0 +1,35 @@
+# Spring
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: course-nacos-svc.course-cloud.svc.cluster.local
+        namespace: course-prod
+      config:
+        # 配置中心地址
+        server-addr: course-nacos-svc.course-cloud.svc.cluster.local
+        namespace: course-prod
+        # 配置文件格式
+        file-extension: yaml
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+    sentinel: # Sentinel配置信息
+      # 取消控制台懒加载
+      eager: true  # 设置控制台的懒加载为true，表示立即加载配置信息
+
+      transport: # 传输配置
+        # 控制台地址
+        dashboard: course-sentinel-svc.course-cloud.svc.cluster.local:8718  # 设置Sentinel控制台的地址
+
+      # nacos配置持久化
+      datasource: # 数据源配置
+        ds1: # 数据源名称
+          nacos: # 使用Nacos作为数据源
+            server-addr: course-nacos-svc.course-cloud.svc.cluster.local  # 设置Nacos服务器地址
+            namespace: course-prod  # 设置Nacos的命名空间
+            dataId: sentinel-course-gateway  # 设置数据ID
+            groupId: DEFAULT_GROUP  # 设置分组ID
+            data-type: json  # 设置数据类型为JSON
+            rule-type: gw-flow  # 设置规则类型为网关流控

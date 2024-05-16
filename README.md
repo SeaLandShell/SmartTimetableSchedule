@@ -1,13 +1,28 @@
 <p align="center">
-	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-b99b286755aef70355a7084753f89cdb7c9.png">
+	<img alt="logo" src="./asset/smart_schedule.png" style="width: 50px;">
 </p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">course v3.6.3</h1>
-<h4 align="center">基于 Vue/Element UI 和 Spring Boot/Spring Cloud & Alibaba 前后端分离的分布式微服务架构</h4>
+<h1 align="center" style="margin: 5px 0 30px; font-weight: bold;">course v1.0.0</h1>
+<h3 align="center">课堂管理系统</h3>
+<h4 align="center">基于 Flutter 和 Spring Boot/Spring Cloud & Alibaba C/S模式的分布式微服务架构</h4>
 <p align="center">
 	<a href="https://gitee.com/y_project/course-Cloud/stargazers"><img src="https://gitee.com/y_project/course-Cloud/badge/star.svg?theme=dark"></a>
 	<a href="https://gitee.com/y_project/course-Cloud"><img src="https://img.shields.io/badge/course-v3.6.3-brightgreen.svg"></a>
 	<a href="https://gitee.com/y_project/course-Cloud/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
+
+## 端口
+- 8080：网关
+- 8848：Nacos
+- 8718: sentinel
+- 9100: course-monitor
+- 9200: course-auth
+- 9201: course-system
+- 9202: course-gen
+- 9203: course-job
+- 9300: course-file
+- 9401: app-cuser
+- 9402: app-ctimetable
+- 9404: app-cschedule
 
 ## 平台简介
 

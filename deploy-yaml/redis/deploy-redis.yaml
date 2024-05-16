@@ -1,0 +1,119 @@
+apiVersion: v1
+data:
+  redis.conf: |-
+    # 关闭保护模式
+    protected-mode no
+
+    # redis链接密码，如果需要密码，那么请取消注释
+    # requirepass redis
+
+    # 日志级别
+    loglevel warning
+
+    # 日志存放目录
+    logfile "/data/redis.log"
+
+    # 数据文件目录
+    dir /data
+    dbfilename dump.rdb
+
+    # 数据库数量
+    databases 16
+
+    # 保存数据库到数据文件
+    save 900 1
+    save 300 10
+    save 60 10000
+kind: ConfigMap
+metadata:
+  name: course-redis-config-cm
+  namespace: course-cloud
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-redis-svc
+  namespace: course-cloud
+  labels:
+    app: course-redis
+spec:
+  ports:
+    - port: 6379
+      name: redis
+      targetPort: 6379
+      # 如果需要NodePort暴露则将这里打开
+      nodePort: 6379
+    # 如果需要NodePort暴露则将这里注释
+#  clusterIP: None
+  selector:
+    app: course-redis
+  # 如果需要NodePort暴露则将这里改为NodePort
+  # ClusterIP, NodePort, LoadBalancer
+#  type: ClusterIP
+  type: NodePort
+  # 如果需要NodePort暴露则将这里改为ClientIP
+  # ClientIP, None
+  sessionAffinity: None
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: course-redis
+  namespace: course-cloud
+spec:
+  selector:
+    matchLabels:
+      app: course-redis
+  serviceName: "course-redis-svc"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: course-redis
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        # 启动命令，使用指定配置文件启动
+        - command:
+            - "redis-server"
+            - "/usr/local/etc/redis.conf"
+          name: redis
+          # 这里一个是官方镜像，一个是我拉取的官方镜像然后推送到国内阿里云的镜像
+          # image: docker.io/library/redis:5.0.14
+          image: registry.cn-hangzhou.aliyuncs.com/xiaohh-docker/redis:5.0.14
+          # 存活探针
+          livenessProbe:
+            # pod初始化完成后20秒开始检测
+            initialDelaySeconds: 20
+            # 之后每隔10秒检查一次
+            periodSeconds: 10
+            # 检查的流程是用tcp协议去查看6379端口是否存活
+            tcpSocket:
+              port: 6379
+          ports:
+            - containerPort: 6379
+              name: redis
+          volumeMounts:
+            # 挂载数据目录
+            - name: redis-data
+              mountPath: /data
+            # 挂载配置文件
+            - name: redis-config
+              mountPath: /usr/local/etc
+              readOnly: true
+      volumes:
+        # 挂载数据目录，使用之前创建的pvc
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: course-redis-pvc
+        # 挂载配置文件，引用之前创建的ConfigMap
+        - name: redis-config
+          configMap:
+            name: course-redis-config-cm
+            items:
+              - key: redis.conf
+                path: redis.conf

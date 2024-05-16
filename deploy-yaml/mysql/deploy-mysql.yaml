@@ -1,0 +1,120 @@
+# 定义一个Kubernetes Secret对象，用于存储MySQL根用户的密码
+apiVersion: v1
+data:
+  mysql-root-password: QEJyb3RoZXIwMzAz # 加密后的密码
+kind: Secret
+metadata:
+  name: course-mysql-password-secret # Secret的名称
+  namespace: course-cloud # 命名空间
+---
+
+# 定义一个Kubernetes ConfigMap对象，用于存储MySQL配置文件
+apiVersion: v1
+data:
+  my.cnf: |-
+    # MySQL配置文件
+    [mysqld]
+    # 示例配置项，实际根据需求修改
+    skip-host-cache
+    skip-name-resolve
+    datadir=/var/lib/mysql
+    socket=/var/run/mysqld/mysqld.sock
+    secure-file-priv=/var/lib/mysql-files
+    user=mysql
+    symbolic-links=0
+    [client]
+    socket=/var/run/mysqld/mysqld.sock
+
+    !includedir /etc/mysql/conf.d/
+    !includedir /etc/mysql/mysql.conf.d/
+kind: ConfigMap
+metadata:
+  name: course-mysql-config-cm # ConfigMap的名称
+  namespace: course-cloud # 命名空间
+
+---
+
+# 定义一个Kubernetes Service对象，用于访问MySQL服务
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-mysql-svc # Service的名称
+  namespace: course-cloud # 命名空间
+  labels:
+    app: course-mysql # 用于选择提供服务的Pod
+spec:
+  ports:
+    - port: 3306 # MySQL服务端口
+      name: mysql
+      targetPort: 3306
+      # 可选：如果需要通过NodePort访问，设置nodePort
+      nodePort: 3306
+#  clusterIP: None # 仅集群内部访问
+  selector:
+    app: course-mysql # 选择标签为app=course-mysql的Pod
+  type: ClusterIP # Service类型
+#  type: NodePort
+  sessionAffinity: None # 会话亲和性
+
+---
+
+# 定义一个Kubernetes StatefulSet对象，用于部署MySQL
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: course-mysql # StatefulSet的名称
+  namespace: course-cloud # 命名空间
+spec:
+  selector:
+    matchLabels:
+      app: course-mysql # 用于选择Pod的标签
+  serviceName: "course-mysql-svc" # 关联的Service名称
+  replicas: 1 # 实例数量
+  template:
+    metadata:
+      labels:
+        app: course-mysql # Pod的标签
+    spec:
+      imagePullSecrets:
+        - name: course-image-account-secret # 私有镜像仓库的认证信息
+      terminationGracePeriodSeconds: 10 # 停止等待时间
+      containers:
+        - args:
+            - --character-set-server=utf8mb4 # MySQL字符集设置
+            - --collation-server=utf8mb4_unicode_ci
+            - --lower_case_table_names=1
+            - --default-time_zone=+8:00
+          name: mysql # 容器名称
+          image: registry.cn-hangzhou.aliyuncs.com/course-cloud/mysql:1.0.0 # MySQL镜像
+          livenessProbe: # 存活探针
+            initialDelaySeconds: 20 # 初次探测延迟
+            periodSeconds: 10 # 探测间隔
+            tcpSocket:
+              port: 3306 # 探测端口
+          ports:
+            - containerPort: 3306 # 容器内部端口
+              name: mysql
+          volumeMounts:
+            - name: mysql-data # 数据卷挂载点
+              mountPath: /var/lib/mysql
+            - name: mysql-conf # 配置卷挂载点
+              mountPath: /etc/my.cnf
+              readOnly: true
+              subPath: my.cnf
+          env:
+            - name: MYSQL_ROOT_PASSWORD # MySQL根用户密码
+              valueFrom:
+                secretKeyRef:
+                  key: mysql-root-password
+                  name: course-mysql-password-secret
+      volumes:
+        - name: mysql-data # 数据卷
+          persistentVolumeClaim:
+            claimName: course-mysql-pvc # 关联的PersistentVolumeClaim
+        - name: mysql-conf # 配置卷
+          configMap:
+            name: course-mysql-config-cm # 关联的ConfigMap
+            items:
+              - key: my.cnf
+                mode: 0644
+                path: my.cnf

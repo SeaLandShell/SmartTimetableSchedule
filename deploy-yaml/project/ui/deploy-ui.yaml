@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: system-ui-deployment
+  name: system-ui-deployment
+  namespace: course-cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: system-ui-deployment
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: system-ui-deployment
+    spec:
+      # 拉取镜像需要使用到的secret
+      imagePullSecrets:
+        - name: course-image-account-secret
+      containers:
+        - image: registry.cn-hangzhou.aliyuncs.com/course-cloud/ui:1.0.0
+          name: ui
+          # 存活探针
+          livenessProbe:
+            # 发送http get请求到80端口的/actuator/health路径检查pod是否健康
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            # pod初始化完毕20秒之后再开始
+            initialDelaySeconds: 20
+            # 之后每10秒进行一次健康检查
+            periodSeconds: 10
+          ports:
+            - containerPort: 8080
+          resources: { }
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: system-ui-deployment
+  name: system-ui-svc
+  namespace: course-cloud
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: system-ui-deployment
+  type: ClusterIP

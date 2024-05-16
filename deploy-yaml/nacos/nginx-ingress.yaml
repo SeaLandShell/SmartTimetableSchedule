@@ -1,0 +1,30 @@
+# 定义一个Kubernetes的Ingress资源，用于配置外部访问内部服务的规则
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  # Ingress的名称和所属命名空间
+  name: course-nacos-ingress
+  namespace: course-cloud
+spec:
+  # 指定Ingress控制器的类
+  ingressClassName: nginx
+  # 定义访问规则
+  rules:
+    - # 指定一个主机名和对应的HTTP访问路径
+      host: nacos.course.city
+      http:
+        paths:
+          - # 指定后端服务和访问路径
+            backend:
+              service:
+                name: course-nacos-svc  # 对应的服务名称
+                port:
+                  number: 8848  # 对应的服务端口
+            path: /  # 访问路径
+            pathType: Prefix  # 路径类型为前缀
+  # 配置TLS证书，用于HTTPS访问
+  tls:
+    - # 指定支持的主机名和对应的TLS密钥
+      hosts:
+        - nacos.course.city
+      secretName: course-tls-secret  # TLS证书的名称

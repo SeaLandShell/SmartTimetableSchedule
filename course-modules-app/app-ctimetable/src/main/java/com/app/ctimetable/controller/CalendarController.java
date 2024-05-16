@@ -69,7 +69,6 @@ public class CalendarController {
             logger.error(e.getMessage(), e);
             return responseWrap.setStatus(1).setMsg("课程表格式错误");
         }
-
         String key = calendarService.shareCalendar(userID, calendar);
         if (key.isEmpty()) {
             responseWrap.setStatus(1).setMsg("发生错误, 请重试");

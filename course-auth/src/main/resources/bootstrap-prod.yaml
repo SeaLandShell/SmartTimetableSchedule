@@ -1,0 +1,17 @@
+# 配置Spring Cloud Nacos服务发现和配置管理
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 设置服务注册中心的地址
+        server-addr: course-nacos-svc.course-cloud.svc.cluster.local
+        namespace: course-prod  # 设置命名空间
+      config:
+        # 配置配置中心的地址
+        server-addr: course-nacos-svc.course-cloud.svc.cluster.local
+        namespace: course-prod  # 设置命名空间
+        # 配置文件的扩展名
+        file-extension: yaml
+        # 配置共享设置，动态加载指定的配置文件
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension} # 根据当前激活的profile加载对应的配置文件

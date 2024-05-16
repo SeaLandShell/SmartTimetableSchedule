@@ -1,0 +1,15 @@
+# 配置Spring相关设置
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 配置服务发现的服务器地址
+        server-addr: 127.0.0.1:8848
+      config:
+        # 配置配置中心的服务器地址
+        server-addr: 127.0.0.1:8848
+        # 配置文件的扩展名
+        file-extension: yml
+        # 配置共享设置，加载指定的配置文件
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension} # 根据激活的环境动态加载配置文件

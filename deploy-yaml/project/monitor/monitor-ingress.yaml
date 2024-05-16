@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: course-monitor-ingress
+  namespace: course-cloud
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: monitor.course.city
+      http:
+        paths:
+          - backend:
+              service:
+                name: course-monitor-svc
+                port:
+                  number: 9100
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - monitor.course.city
+      secretName: course-tls-secret

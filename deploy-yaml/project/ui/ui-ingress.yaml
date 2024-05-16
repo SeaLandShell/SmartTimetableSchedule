@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: course-ui-ingress
+  namespace: course-cloud
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: cloud.course.city
+      http:
+        paths:
+          - backend:
+              service:
+                name: course-ui-svc
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - cloud.course.city
+      secretName: course-tls-secret

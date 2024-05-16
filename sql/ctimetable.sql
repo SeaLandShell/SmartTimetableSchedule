@@ -1,6 +1,6 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
+use `course-cloud`;
 -- ----------------------------
 -- Table structure for calendar_table  课表
 -- ----------------------------
@@ -25,7 +25,7 @@ CREATE TABLE `calendar_table`
 DROP TABLE IF EXISTS `shared_table`;
 CREATE TABLE `shared_table`
 (
-    `userId`   int(11)                                             NOT NULL,
+    `userId`   bigint(20)                                             NOT NULL,
     `key`      char(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
     `calendar` json                                                NOT NULL,
     PRIMARY KEY (`userId`) USING BTREE,

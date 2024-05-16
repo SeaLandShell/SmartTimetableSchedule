@@ -49,10 +49,14 @@ public class CalendarServiceImpl implements CalendarService {
         if (term.size() != calendar.size()) {
             return -1;
         }
-        calendarMapper.deleteCalendar(userId);
         int size = 0;
         Map<String, Object> map = new HashMap<>();
         for (int i = 0, length = term.size(); i < length; i++) {
+            if(calendarMapper.getCalendar(userId,term.get(i))!=null){
+//                calendarMapper.deleteCalendar(userId,term.get(i));
+//                如果calendar存在，不能直接删除课表，必须保持课表信息，此时，提示用户该学期该课表已存在，请在课表页面选择学期直接导入课表。
+                return 0;
+            }
             map.put("userid", userId);
             map.put("term", term.get(i));
             map.put("calendar", calendar.get(i));

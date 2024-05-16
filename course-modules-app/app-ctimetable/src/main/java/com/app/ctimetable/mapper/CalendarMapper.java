@@ -18,7 +18,7 @@ public interface CalendarMapper {
 
     int insertCalendar(Map<String, Object> map);
 
-    int deleteCalendar(@Param("userid") int userId);
+    int deleteCalendar(@Param("userid") int userId,@Param("term") String term);
 
     int shareCalendar(HashMap<Object, Object> map);
 

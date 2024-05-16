@@ -93,7 +93,7 @@ public class CollegeController {
         ResponseWrap<Boolean> responseWrap = new ResponseWrap<>();
         int size = calendarService.updateCalendar(userID, terms, courses);
         if (size <= 0) {
-            responseWrap.setData(false).setMsg("导入课程表出错");
+            responseWrap.setData(false).setMsg("该课表已存在");
         }else {
             responseWrap.setData(true).setMsg("导入课程表成功").setStatus(0);
         }
@@ -130,7 +130,7 @@ public class CollegeController {
                                                  @RequestParam("userID") int userID
     ) {
         ResponseWrap<List<Course>> resp = new ResponseWrap<>();
-//        System.out.println(calendarService.getCalendar(userID, term));
+        System.out.println(calendarService.getCalendar(userID, term));
         return resp.setStatus(0)
                 .setData(new Gson().fromJson(calendarService.getCalendar(userID, term), new TypeToken<List<Course>>() {
                 }.getType()));

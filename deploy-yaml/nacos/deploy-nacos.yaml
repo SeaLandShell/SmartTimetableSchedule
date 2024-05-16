@@ -1,0 +1,180 @@
+apiVersion: v1
+data:
+  jvm-xmn: "64m"
+  jvm-xms: "128m"
+  jvm-xmx: "128m"
+  mode: "standalone"
+  mysql-database-num: "1"
+  mysql-service-db-name: "course_config"
+  mysql-service-db-param: "characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&serverTimezone=UTC"
+  mysql-service-host: "course-mysql-0.course-mysql-svc.course-cloud.svc.cluster.local"
+  mysql-service-port: "3306"
+  mysql-service-user: "root"
+  spring-datasource-platform: "mysql"
+kind: ConfigMap
+metadata:
+  name: course-nacos-cm
+  namespace: course-cloud
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-nacos-svc
+  namespace: course-cloud
+  labels:
+    app: course-nacos
+spec:
+  ports:
+    - port: 8848
+      name: client
+      targetPort: 8848
+      # 如果你需要使用到NodePort或LoadBalancer暴露应用，那么你可以将这里打开
+      nodePort: 30848
+    - port: 9848
+      name: client-rpc
+      targetPort: 9848
+      nodePort: 30948
+    - port: 9849
+      name: raft-rpc
+      targetPort: 9849
+      nodePort: 30849
+    - port: 7848
+      name: old-raft-rpc
+      targetPort: 7848
+      nodePort: 30748
+  # 如果你需要使用到NodePort或LoadBalancer暴露应用，那么你需要注释掉clusterIP
+#  clusterIP: None
+  selector:
+    app: course-nacos
+  # ClusterIP, NodePort, LoadBalancer
+  type: ClusterIP
+  # 如果你需要使用到NodePort或LoadBalancer暴露应用，那么你需要将这里改为ClientIP
+  # ClientIP, None
+  sessionAffinity: None
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: course-nacos
+  namespace: course-cloud
+spec:
+  selector:
+    matchLabels:
+      app: course-nacos
+  serviceName: "course-nacos-svc"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: course-nacos
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: nacos
+          # 这里一个是官方镜像，一个是我拉取的官方镜像然后推送到国内阿里云的镜像
+           image: docker.io/nacos/nacos-server:v2.0.4
+#          image: registry.cn-hangzhou.aliyuncs.com/xiaohh-docker/nacos-server:v2.0.4
+          # 存活探针
+          livenessProbe:
+            # 通过发送http的get请求确认nacos是否存活
+            httpGet:
+              # 请求8848端口的/nacos/actuator/health路径，如果返回为200则证明存活
+              path: /nacos/actuator/health
+              port: 8848
+              scheme: HTTP
+            # pod初始化完成后多久开始进行存活探针的检查，这里设置为30秒
+            initialDelaySeconds: 30
+            # 之后每十秒检查一次是否存活
+            periodSeconds: 10
+          ports:
+            - containerPort: 8848
+              name: client
+            - containerPort: 9848
+              name: client-rpc
+            - containerPort: 9849
+              name: raft-rpc
+            - containerPort: 7848
+              name: old-raft-rpc
+          volumeMounts:
+            # 挂载数据目录
+            - name: nacos-data
+              mountPath: /home/nacos/data
+            # 挂载日志目录
+            - name: nacos-logs
+              mountPath: /home/nacos/logs
+          env:
+            # 引用ConfigMap里面的各个属性
+            - name: JVM_XMN
+              valueFrom:
+                configMapKeyRef:
+                  key: jvm-xmn
+                  name: course-nacos-cm
+            - name: JVM_XMS
+              valueFrom:
+                configMapKeyRef:
+                  key: jvm-xms
+                  name: course-nacos-cm
+            - name: JVM_XMX
+              valueFrom:
+                configMapKeyRef:
+                  key: jvm-xmx
+                  name: course-nacos-cm
+            - name: MODE
+              valueFrom:
+                configMapKeyRef:
+                  key: mode
+                  name: course-nacos-cm
+            - name: MYSQL_DATABASE_NUM
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql-database-num
+                  name: course-nacos-cm
+            - name: MYSQL_SERVICE_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql-service-db-name
+                  name: course-nacos-cm
+            - name: MYSQL_SERVICE_DB_PARAM
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql-service-db-param
+                  name: course-nacos-cm
+            - name: MYSQL_SERVICE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql-service-host
+                  name: course-nacos-cm
+            # 数据库的密码引用之前为MySQL创建的Secret
+            - name: MYSQL_SERVICE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: mysql-root-password
+                  name: course-mysql-password-secret
+            - name: MYSQL_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql-service-port
+                  name: course-nacos-cm
+            - name: MYSQL_SERVICE_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: mysql-service-user
+                  name: course-nacos-cm
+            - name: SPRING_DATASOURCE_PLATFORM
+              valueFrom:
+                configMapKeyRef:
+                  key: spring-datasource-platform
+                  name: course-nacos-cm
+      volumes:
+        # 使用刚刚创建的数据目录的pvc
+        - name: nacos-data
+          persistentVolumeClaim:
+            claimName: course-nacos-data-pvc
+        # 使用刚刚创建的日志目录的pvc
+        - name: nacos-logs
+          persistentVolumeClaim:
+            claimName: course-nacos-logs-pvc

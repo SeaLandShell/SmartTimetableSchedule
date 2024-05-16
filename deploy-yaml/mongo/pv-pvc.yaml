@@ -1,0 +1,36 @@
+# 定义一个PersistentVolume对象，用于提供持久化存储的能力
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: course-mongo-pv
+spec:
+  capacity:
+    # 申请的存储容量，生产环境中应根据实际需求进行调整
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeSource:  # 正确的字段应该是 persistentVolumeSource
+    nfs:                  # 在此指定NFS相关的配置
+      server: 121.43.152.245  # 指定NFS服务器的地址
+      path: "/data/nfs/course-cloud/mysql"  # 共享目录路径，注意路径字符串建议用双引号包围
+  storageClassName: "nfs"  # 指定存储类的名称，这里使用的是"nfs"存储类
+
+---
+
+# 定义一个PersistentVolumeClaim对象，用于绑定PersistentVolume
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: course-mongo-pvc
+  namespace: course-cloud
+spec:
+  accessModes:
+    - ReadWriteMany
+  # 指定使用的存储类，这里与PersistentVolume中的一致
+  storageClassName: "nfs"
+  resources:
+    requests:
+      # 申请的存储容量，生产环境中应根据实际需求进行调整
+      storage: 1Gi
+  volumeName: course-mongo-pv
+  # 指定绑定的PersistentVolume的名称

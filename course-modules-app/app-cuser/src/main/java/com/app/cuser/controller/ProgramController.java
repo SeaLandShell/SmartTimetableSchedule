@@ -23,7 +23,7 @@ public class ProgramController  extends BaseController {
     @ApiOperation(value = "添加日程")
     @PostMapping
     public R<Integer> addProgram(Integer userId,String title) {
-//        System.out.println(userId.intValue()+title);
+        System.out.println(userId.intValue()+title);
         return R.ok(programMapper.addProgram(RandomStringUtils.randomAlphanumeric(20),userId,title));
     }
 

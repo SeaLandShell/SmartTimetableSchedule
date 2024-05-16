@@ -30,7 +30,7 @@
     <delete id="deleteCalendar">
         delete
         from calendar_table
-        where userid = #{userid};
+        where userid = #{userid} and term = #{term};
     </delete>
 
     <insert id="shareCalendar" parameterType="map">

@@ -9,12 +9,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
-        <module>course-system</module>
+        <module>course-file</module>
         <module>course-gen</module>
         <module>course-job</module>
-        <module>course-file</module>
-        <module>course-cuser</module>
-        <module>course-ctimetable</module>
+        <module>course-system</module>
     </modules>
 
     <artifactId>course-modules</artifactId>

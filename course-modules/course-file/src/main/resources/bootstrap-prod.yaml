@@ -1,0 +1,17 @@
+# Spring
+spring:
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: course-nacos-svc.course-cloud.svc.cluster.local
+        namespace: course-prod
+      config:
+        # 配置中心地址
+        server-addr: course-nacos-svc.course-cloud.svc.cluster.local
+        namespace: course-prod
+        # 配置文件格式
+        file-extension: yaml
+        # 共享配置
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

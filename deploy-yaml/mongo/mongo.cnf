@@ -1,0 +1,40 @@
+# mongod配置文件
+# 请参阅MongoDB官方文档以获取更多配置建议
+# https://docs.mongodb.com/manual/reference/configuration-options/
+
+# 数据存储相关配置
+storage:
+  dbPath: /var/lib/mongodb  # 数据库文件存储位置
+  journal:
+    enabled: true  # 启用日志记录以保证数据一致性
+
+# 网络与连接配置
+net:
+  bindIp: 0.0.0.0  # 绑定所有IP地址，允许从任何网络访问
+  port: 27017  # MongoDB默认端口
+  socket:
+    timeout: 30000  # 设置TCP套接字超时时间，单位为毫秒
+
+# 进程管理
+processManagement:
+  fork: true  # 以守护进程方式运行
+  pidFilePath: /var/run/mongod/mongod.pid  # PID文件路径
+
+# 日志配置
+systemLog:
+  destination: file  # 将日志输出到文件
+  path: /var/log/mongodb/mongod.log  # 日志文件路径
+  logAppend: true  # 以追加模式写入日志
+
+# 配置文件包括
+# 注意：请根据需要在以下目录中添加额外的配置文件
+# 注意：这些配置文件必须以'.conf'结尾
+include:
+  - /etc/mongodb/conf.d/*.conf
+  - /etc/mongodb/mongodb.conf.d/*.conf
+
+# 关闭MongoDB的主机名解析以提高性能
+noHostResolution: true
+
+# 不推荐启用符号链接，以避免潜在的安全风险
+# symbolicLinks: false

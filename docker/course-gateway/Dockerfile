@@ -1,4 +1,4 @@
-FROM openjdk:11-jre
+FROM openjdk:8-jre-alpine
 
 # 作者
 LABEL org.opencontainers.image.authors="1769168668@qq.com"

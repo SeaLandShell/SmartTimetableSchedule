@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 设置镜像仓库路径
-REPOSITORY_PATH='registry.cn-hangzhou.aliyuncs.com/course-schedule/'
+REPOSITORY_PATH='registry.cn-hangzhou.aliyuncs.com/course-cloud/'
 PAT_TOKEN='@Brother0303'
 # 设置镜像标签
 TAG='1.0.0'
@@ -50,7 +50,7 @@ move() {
     # 现在，MODULE_PARTS 是一个数组，可以访问各个部分
     first_part="${MODULE_PARTS[0]}" # 获取第一个部分
     second_part="${MODULE_PARTS[1]}" # 获取第二个部分
-    MODULE_JAR="../course-modules/${course_MODULE}/target/${first_part}-modules-${second_part}.jar" # 构建模块JAR文件的路径
+    MODULE_JAR="../course-modules/${course_MODULE}/target/${first_part}-${second_part}.jar" # 构建模块JAR文件的路径
     MODULE_DIR="./course-modules/${course_MODULE}/java" # 构建模块对应的java目录路径
 
     # 检查JAR文件是否存在
@@ -76,7 +76,7 @@ move() {
       fi
     done
   # 监控服务
-  course_MONITOR='../course-visual/course-monitor/target/course-visual-monitor.jar'
+  course_MONITOR='../course-visual/course-monitor/target/course-monitor.jar'
   if [ -f "${course_MONITOR}" ]; then
     # 如果监控服务jar文件存在，则移动到java目录下
     if [ ! -d './course-visual/course-visual-monitor/java' ]; then
@@ -130,16 +130,14 @@ build() {
     # 切换到Dockerfile所在目录
     cd "${BUILD_DIR}" || exit
     # 使用Docker构建镜像，标签格式为<仓库路径><模块名称>:<标签>
-    docker build -t "${MODULE_NAME}:${TAG}" .
+    docker build -t "${REPOSITORY_PATH}${MODULE_NAME}:${TAG}" .
   done
 }
 
 
 # 推送Docker镜像
-#docker login -u aliyun6415635881 --password-stdin <<< "$PAT_TOKEN" registry.cn-hangzhou.aliyuncs.com
+docker login -u aliyun6415635881 --password-stdin <<< "$PAT_TOKEN" registry.cn-hangzhou.aliyuncs.com
 push() {
-  # 推送Docker镜像
-  docker login -u aliyun6415635881 --password-stdin <<< "$PAT_TOKEN" registry.cn-hangzhou.aliyuncs.com
   IMAGE_LIST=$(docker images | grep "${REPOSITORY_PATH}" | awk '{print $1":"$2}')
   if [ -n "${IMAGE_LIST}" ]; then
     for IMAGE in ${IMAGE_LIST}; do

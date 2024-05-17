@@ -85,7 +85,7 @@ spec:
             - --lower_case_table_names=1
             - --default-time_zone=+8:00
           name: mysql # 容器名称
-          image: registry.cn-hangzhou.aliyuncs.com/course-cloud/mysql:1.0.0 # MySQL镜像
+          image: registry.cn-hangzhou.aliyuncs.com/course-cloud/course-cloudmysql:1.0.0 # MySQL镜像
           livenessProbe: # 存活探针
             initialDelaySeconds: 20 # 初次探测延迟
             periodSeconds: 10 # 探测间隔

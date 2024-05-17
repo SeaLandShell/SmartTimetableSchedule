@@ -20,7 +20,7 @@ spec:
       imagePullSecrets:
         - name: course-image-account-secret
       containers:
-        - image: registry.cn-hangzhou.aliyuncs.com/course-cloud/ui:1.0.0
+        - image: registry.cn-hangzhou.aliyuncs.com/course-cloud/course-cloudui:1.0.0
           name: ui
           # 存活探针
           livenessProbe:

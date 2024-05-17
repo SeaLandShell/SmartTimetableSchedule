@@ -36,7 +36,7 @@ spec:
               value: "64m"
             - name: XMN
               value: "32m"
-          image: registry.cn-hangzhou.aliyuncs.com/course-cloud/system:1.0.0
+          image: registry.cn-hangzhou.aliyuncs.com/course-cloud/course-cloudsystem:1.0.0
           name: system
           # 存活探针
           livenessProbe:

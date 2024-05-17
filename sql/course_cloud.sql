@@ -110,7 +110,7 @@ CREATE TABLE t_work (
 	end_time             datetime          NOT NULL               COMMENT '作业截止时间',
 	state             bigint(20)        NOT NULL               COMMENT '是否过期（0标识未开始，1标识正在进行中，2标识已结束，3标识已重新提交）',
   gmt_create        datetime          DEFAULT                CURRENT_TIMESTAMP                 COMMENT '创建时间',
-  gmt_modified      datetime          DEFAULT(CURRENT_TIMESTAMP)               ON UPDATE CURRENT_TIMESTAMP           COMMENT '更新时间',
+  gmt_modified      datetime          DEFAULTCURRENT_TIMESTAMP               ON UPDATE CURRENT_TIMESTAMP           COMMENT '更新时间',
   PRIMARY KEY (work_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='作业表';
 
@@ -130,7 +130,7 @@ CREATE TABLE t_upload (
 	score           int(11)             NOT NULL DEFAULT 0 COMMENT '评分',
   review          text                NOT NULL                COMMENT '审核状态(0标识未审核，1标识审核成功，2标识打回重新提交)',
   gmt_create        datetime          DEFAULT                CURRENT_TIMESTAMP                 COMMENT '创建时间',
-  gmt_modified      datetime          DEFAULT(CURRENT_TIMESTAMP)               ON UPDATE CURRENT_TIMESTAMP           COMMENT '更新时间',
+  gmt_modified      datetime          DEFAULTCURRENT_TIMESTAMP               ON UPDATE CURRENT_TIMESTAMP           COMMENT '更新时间',
   PRIMARY KEY (upload_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='上传表';
 
@@ -162,7 +162,7 @@ CREATE TABLE t_mnotice (
   title           text            NOT NULL                COMMENT '标题',
   content         text            NOT NULL                COMMENT '内容',
   gmt_create        datetime          DEFAULT                CURRENT_TIMESTAMP                 COMMENT '创建时间',
-  gmt_modified      datetime          DEFAULT(CURRENT_TIMESTAMP)               ON UPDATE CURRENT_TIMESTAMP           COMMENT '更新时间',
+  gmt_modified      datetime          DEFAULTCURRENT_TIMESTAMP               ON UPDATE CURRENT_TIMESTAMP           COMMENT '更新时间',
   PRIMARY KEY (mnotice_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='通知表';
 

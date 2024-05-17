@@ -43,14 +43,14 @@ spec:
         app: course-sentinel-deploy
     spec:
       containers:
-        - image: registry.cn-shengzhen.aliyuncs.com/xiaohh-docker/sentinel:1.8.6
+        - image: registry-vpc.cn-shenzhen.aliyuncs.com/xiaohh-docker/sentinel:1.8.6
           name: sentinel
           # 存活探针
           livenessProbe:
             # 使用http的get请求判断pod是否存活，请求8719端口的/clusterNode判断pod是否存活
             httpGet:
               path: /clusterNode
-              port: 8718
+              port: 8719
               scheme: HTTP
             # 在pod初始化完毕20秒后再开始进行存活探针
             initialDelaySeconds: 20
@@ -128,7 +128,7 @@ spec:
       port: 8719
       protocol: TCP
       targetPort: 8719
-       nodePort: 30719
+      nodePort: 30719
   selector:
     app: course-sentinel-deploy
   type: NodePort

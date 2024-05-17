@@ -9,10 +9,9 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeSource:  # 正确的字段应该是 persistentVolumeSource
-    nfs:                  # 在此指定NFS相关的配置
-      server: 121.43.152.245  # 指定NFS服务器的地址
-      path: "/data/nfs/course-cloud/mysql"  # 共享目录路径，注意路径字符串建议用双引号包围
+  nfs:                  # 在此指定NFS相关的配置
+    server: 121.43.152.245  # 指定NFS服务器的地址
+    path: "/data/nfs/course-cloud/mysql"  # 共享目录路径，注意路径字符串建议用双引号包围
   storageClassName: "nfs"  # 指定存储类的名称，这里使用的是"nfs"存储类
 
 ---

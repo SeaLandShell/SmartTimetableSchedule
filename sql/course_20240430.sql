@@ -1,11 +1,11 @@
-DROP DATABASE IF EXISTS `course_cloud`;
+DROP DATABASE IF EXISTS `course-cloud`;
 
-CREATE DATABASE  `course_cloud` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE  `course-cloud` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
-USE `course_cloud`;
+USE `course-cloud`;
 
 
 -- ----------------------------

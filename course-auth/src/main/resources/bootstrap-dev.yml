@@ -4,10 +4,10 @@ spring:
     nacos:
       discovery:
         # 配置服务发现的服务器地址
-        server-addr: 127.0.0.1:8848
+        server-addr: 8.149.130.17:8848
       config:
         # 配置配置中心的服务器地址
-        server-addr: 127.0.0.1:8848
+        server-addr: 8.149.130.17:8848
         # 配置文件的扩展名
         file-extension: yml
         # 配置共享设置，加载指定的配置文件

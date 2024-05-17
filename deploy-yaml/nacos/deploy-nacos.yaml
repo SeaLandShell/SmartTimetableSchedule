@@ -45,7 +45,7 @@ spec:
       targetPort: 7848
       nodePort: 30748
   # 如果你需要使用到NodePort或LoadBalancer暴露应用，那么你需要注释掉clusterIP
-#  clusterIP: None
+  # clusterIP: None
   selector:
     app: course-nacos
   # ClusterIP, NodePort, LoadBalancer
@@ -76,8 +76,8 @@ spec:
       containers:
         - name: nacos
           # 这里一个是官方镜像，一个是我拉取的官方镜像然后推送到国内阿里云的镜像
-           image: docker.io/nacos/nacos-server:v2.0.4
-#          image: registry.cn-hangzhou.aliyuncs.com/xiaohh-docker/nacos-server:v2.0.4
+          # image: docker.io/nacos/nacos-server:v2.0.4
+          image: registry.cn-hangzhou.aliyuncs.com/course-cloud/course-cloudnacos:1.0.0
           # 存活探针
           livenessProbe:
             # 通过发送http的get请求确认nacos是否存活

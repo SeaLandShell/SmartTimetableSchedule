@@ -48,12 +48,12 @@ spec:
       name: mysql
       targetPort: 3306
       # 可选：如果需要通过NodePort访问，设置nodePort
-      nodePort: 3306
+      nodePort: 30306
 #  clusterIP: None # 仅集群内部访问
   selector:
     app: course-mysql # 选择标签为app=course-mysql的Pod
-#  type: NodePort # Service类型
-  type: NodePort
+  type: NodePort # Service类型
+#  type: NodePort
   sessionAffinity: None # 会话亲和性
 
 ---

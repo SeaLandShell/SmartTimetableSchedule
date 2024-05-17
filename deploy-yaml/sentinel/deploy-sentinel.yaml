@@ -123,12 +123,12 @@ spec:
       port: 8718
       protocol: TCP
       targetPort: 8718
-      # nodePort: 30718
+      nodePort: 30718
     - name: api
       port: 8719
       protocol: TCP
       targetPort: 8719
-      # nodePort: 30719
+       nodePort: 30719
   selector:
     app: course-sentinel-deploy
   type: NodePort

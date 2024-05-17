@@ -44,14 +44,14 @@ spec:
       name: redis
       targetPort: 6379
       # 如果需要NodePort暴露则将这里打开
-      nodePort: 6379
+      nodePort: 30379
     # 如果需要NodePort暴露则将这里注释
 #  clusterIP: None
   selector:
     app: course-redis
   # 如果需要NodePort暴露则将这里改为NodePort
   # ClusterIP, NodePort, LoadBalancer
-#  type: NodePort
+#  type: ClusterIP
   type: NodePort
   # 如果需要NodePort暴露则将这里改为ClientIP
   # ClientIP, None

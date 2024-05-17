@@ -69,4 +69,4 @@ spec:
       targetPort: 9100
   selector:
     app: course-monitor-deployment
-  type: NodePort
+  type: ClusterIP

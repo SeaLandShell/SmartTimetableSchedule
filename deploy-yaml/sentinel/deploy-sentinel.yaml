@@ -131,4 +131,4 @@ spec:
       # nodePort: 30719
   selector:
     app: course-sentinel-deploy
-  type: ClusterIP
+  type: NodePort

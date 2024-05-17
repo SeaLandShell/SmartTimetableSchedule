@@ -52,8 +52,8 @@ spec:
 #  clusterIP: None # 仅集群内部访问
   selector:
     app: course-mysql # 选择标签为app=course-mysql的Pod
-  type: ClusterIP # Service类型
-#  type: NodePort
+#  type: NodePort # Service类型
+  type: NodePort
   sessionAffinity: None # 会话亲和性
 
 ---

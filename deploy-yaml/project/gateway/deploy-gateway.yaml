@@ -69,4 +69,4 @@ spec:
       targetPort: 8080
   selector:
     app: course-gateway-deployment
-  type: ClusterIP
+  type: NodePort

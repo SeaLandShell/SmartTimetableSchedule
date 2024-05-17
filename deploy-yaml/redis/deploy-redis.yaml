@@ -51,7 +51,7 @@ spec:
     app: course-redis
   # 如果需要NodePort暴露则将这里改为NodePort
   # ClusterIP, NodePort, LoadBalancer
-#  type: ClusterIP
+#  type: NodePort
   type: NodePort
   # 如果需要NodePort暴露则将这里改为ClientIP
   # ClientIP, None

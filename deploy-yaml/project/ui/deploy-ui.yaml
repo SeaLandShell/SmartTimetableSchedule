@@ -53,4 +53,4 @@ spec:
       targetPort: 80
   selector:
     app: system-ui-deployment
-  type: ClusterIP
+  type: NodePort

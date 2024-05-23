@@ -107,3 +107,6 @@ com.course
 ![img.png](./product/designImg/result/9homework.png)
 ![img.png](./product/designImg/result/10detail.png)
 ![img.png](./product/designImg/result/11personal.png)
+
+## 联系作者
+QQ号：1769168668

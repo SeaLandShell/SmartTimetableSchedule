@@ -107,5 +107,5 @@ com.course
 ![img.png](./product/designImg/result/11personal.png)
 
 ## 联系作者
-QQ号：1769168668
+QQ号：1769168668\
 邮箱：qaz110258357@163.com

@@ -7,7 +7,7 @@
 <p align="center">
 <a href="https://gitee.com/SeaLandShell/SmartTimetableSchedule">
     <img src="https://img.shields.io/badge/course-v1.0.0-brightgreen.svg"></a>
-<a href="https://gitee.com/SeaLandShell/SmartTimetableSchedule/backend/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
+<a href="https://gitee.com/SeaLandShell/SmartTimetableSchedule/blob/backend/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
 
 ## 端口
@@ -108,3 +108,4 @@ com.course
 
 ## 联系作者
 QQ号：1769168668
+邮箱：qaz110258357@163.com

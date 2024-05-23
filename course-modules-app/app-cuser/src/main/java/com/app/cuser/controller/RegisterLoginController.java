@@ -99,7 +99,7 @@ public class RegisterLoginController extends BaseController {
             return error("手机号不存在",new Object());
         }else{
             CourseUser user=courseUserService.selectCourseUserByPhoneNumber(phone);
-            user.setPassword(password);
+            user.setPassword(SecurityUtils.encryptPassword(password));
             if(toAjax(courseUserService.updateCourseUser(user)).equals(success())){
                 return success("更改成功",user);
             }

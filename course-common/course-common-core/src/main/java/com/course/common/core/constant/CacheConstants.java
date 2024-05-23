@@ -11,8 +11,8 @@ public class CacheConstants
      * 缓存有效期，默认720（分钟）
      * wxw改为43200分钟
      */
-    public final static long EXPIRATION = 43200;
-    public final static long EXPIRATION_APP = 43200;
+    public final static long EXPIRATION = 720;
+    public final static long EXPIRATION_APP = 720;
 
     /**
      * 缓存刷新时间，默认120（分钟）

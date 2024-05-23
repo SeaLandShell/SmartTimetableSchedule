@@ -7,8 +7,7 @@
 <p align="center">
 <a href="https://gitee.com/SeaLandShell/SmartTimetableSchedule">
     <img src="https://img.shields.io/badge/course-v1.0.0-brightgreen.svg"></a>
-
-[//]: # (<a href="https://gitee.com/SeaLandShell/SmartTimetableSchedule/backend/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>)
+<a href="https://gitee.com/SeaLandShell/SmartTimetableSchedule/backend/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
 
 ## 端口
@@ -41,8 +40,7 @@
   器、⽂件上传下载、⽇历等组件实现各功能。
 * 注册中心、配置中心选型Nacos，权限认证使用Redis。
 
-#### 友情链接 [课堂管理系统/course-Cloud](https://gitee.com/SeaLandShell/SmartTimetableSchedule) Fitee仓库。
-
+#### 友情链接 [课堂管理系统/SmartTimetableSchedule](https://gitee.com/SeaLandShell/SmartTimetableSchedule) Gitee仓库。
 ## 系统模块
 
 ~~~
@@ -83,7 +81,7 @@ com.course
 ## 数据库设计
 ![img.png](./product/designImg/ER图.jpg)
 ## 系统业务流程图
-![img.png](./product/designImg/业务流程图.jpg)
+![img.png](./product/designImg/ER/业务流程图.jpg)
 ## 总体包图
 ![img.png](./product/designImg/课堂管理系统总体包图.jpg)
 ## 类图
